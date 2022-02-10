@@ -1,32 +1,293 @@
 Portfolio: R and Data Analysis
 ================
 
-``` r
-library(tidyverse)
-```
+# Gapminder
 
-    ## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+## Analysis
 
-    ## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
-    ## ✓ tibble  3.1.6     ✓ dplyr   1.0.7
-    ## ✓ tidyr   1.1.4     ✓ stringr 1.4.0
-    ## ✓ readr   2.1.1     ✓ forcats 0.5.1
-
-    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-    ## x dplyr::filter() masks stats::filter()
-    ## x dplyr::lag()    masks stats::lag()
+Bosnia Line Graph Life Expectancy
 
 ``` r
-library(knitr)
-library(kableExtra)
+gapminder %>% 
+  filter(country == "Bosnia and Herzegovina") %>% 
+  ggplot() + 
+  geom_line(aes(year,life_expectancy)) +
+  scale_y_continuous(labels = scales::comma) + 
+  xlab("Year") + ylab("Life Expectancy") + 
+  ggtitle("Line Graph of Bosnia Life Expectancy") + 
+  theme_calc()
 ```
 
-    ## 
-    ## Attache Paket: 'kableExtra'
+![](README_figs/README-unnamed-chunk-3-1.png)<!-- -->
 
-    ## Das folgende Objekt ist maskiert 'package:dplyr':
-    ## 
-    ##     group_rows
+Infant mortality rate by continents
+
+``` r
+gapminder %>% 
+  filter(year == 2014) %>% 
+  ggplot() + geom_boxplot(aes(continent, infant_mortality, color = continent), show.legend = F)
+```
+
+    ## Warning: Removed 7 rows containing non-finite values (stat_boxplot).
+
+![](README_figs/README-unnamed-chunk-4-1.png)<!-- -->
+
+What regions are there actually?
+
+``` r
+levels(gapminder$region)
+```
+
+    ##  [1] "Australia and New Zealand" "Caribbean"                
+    ##  [3] "Central America"           "Central Asia"             
+    ##  [5] "Eastern Africa"            "Eastern Asia"             
+    ##  [7] "Eastern Europe"            "Melanesia"                
+    ##  [9] "Micronesia"                "Middle Africa"            
+    ## [11] "Northern Africa"           "Northern America"         
+    ## [13] "Northern Europe"           "Polynesia"                
+    ## [15] "South America"             "South-Eastern Asia"       
+    ## [17] "Southern Africa"           "Southern Asia"            
+    ## [19] "Southern Europe"           "Western Africa"           
+    ## [21] "Western Asia"              "Western Europe"
+
+Population bar graph of Europe by countries.
+
+``` r
+gapminder %>% 
+  filter(year == 2015 & continent == "Europe") %>% 
+  ggplot(aes(y=reorder(country, population),x = population)) + 
+  geom_bar(stat = "identity") + 
+  scale_x_continuous(labels = scales::comma) + 
+  ggtitle("Bar Graph of European Countries") + 
+  xlab("Population") + 
+  ylab("Country")
+```
+
+![](README_figs/README-unnamed-chunk-6-1.png)<!-- -->
+
+Pie chart of Europe’s population
+
+``` r
+gapminder %>% 
+  filter(year == 2015 & continent == "Europe") %>% 
+  ggplot(aes(y=reorder(country, population),x = population)) + 
+  geom_bar(stat = "identity") + 
+  scale_x_continuous(labels = scales::comma) + 
+  coord_polar("y", start=0) +
+  ggtitle("Bar Graph of European Countries") + 
+  xlab("Population") + 
+  ylab("Country")
+```
+
+![](README_figs/README-unnamed-chunk-7-1.png)<!-- -->
+
+Biggest Life Expectancy Countries in Europe?
+
+``` r
+gapminder %>% 
+  filter(year == 2016 & continent == "Europe") %>% 
+  slice_max(life_expectancy, n = 5)
+```
+
+    ##       country year infant_mortality life_expectancy fertility population gdp
+    ## 1     Iceland 2016               NA            83.3        NA         NA  NA
+    ## 2 Switzerland 2016               NA            83.1        NA         NA  NA
+    ## 3       Spain 2016               NA            82.7        NA         NA  NA
+    ## 4       Italy 2016               NA            82.3        NA         NA  NA
+    ## 5  Luxembourg 2016               NA            82.3        NA         NA  NA
+    ##   continent          region
+    ## 1    Europe Northern Europe
+    ## 2    Europe  Western Europe
+    ## 3    Europe Southern Europe
+    ## 4    Europe Southern Europe
+    ## 5    Europe  Western Europe
+
+Bar graph of life expectancy in Europe by countries.
+
+``` r
+gapminder %>% 
+  filter(year == 2016 & continent == "Europe") %>% 
+  ggplot(aes(y = reorder(country, life_expectancy), x = life_expectancy)) +
+  geom_bar(stat = "identity") + 
+  coord_cartesian(xlim = c(70,85)) + 
+  xlab("Life Expectancy") + ylab(NULL) + 
+  labs(title = "Life Expectancy in European Countries (2016)", caption = "Gapminder data.")
+```
+
+![](README_figs/README-unnamed-chunk-9-1.png)<!-- -->
+
+Israel and its neighbors GDP.
+
+``` r
+gapminder %>% 
+  filter(country %in% c("Israel", "Lebanon", "Egypt", "Saudi Arabia", "Bahrain", "West Bank and Gaza", "Yemen", "United Arab Emirate", "Iran", "Syria")) %>% 
+  filter(year == 2009) %>% 
+  ggplot(aes(gdp,country)) + 
+  geom_bar(stat = "identity")
+```
+
+    ## Warning: Removed 1 rows containing missing values (position_stack).
+
+![](README_figs/README-unnamed-chunk-10-1.png)<!-- -->
+
+How was fertility and life expectancy in 1962?
+
+``` r
+gapminder %>% 
+  filter(year == 1962) %>% 
+  ggplot(aes(fertility, life_expectancy)) + 
+  geom_point()
+```
+
+![](README_figs/README-unnamed-chunk-11-1.png)<!-- -->
+
+How was fertility and life expectancy in 1962 and what are the
+continents?
+
+``` r
+gapminder %>% 
+  filter(year == 1962) %>% 
+  ggplot(aes(fertility, life_expectancy, color = continent)) + 
+  geom_point()
+```
+
+![](README_figs/README-unnamed-chunk-12-1.png)<!-- -->
+
+How was it in 2012 compared to 1962?
+
+``` r
+gapminder %>% 
+  filter(year %in% c(1962,2012)) %>% 
+  ggplot(aes(fertility, life_expectancy, color = continent)) + 
+  geom_point() + 
+  facet_grid(.~year)
+```
+
+![](README_figs/README-unnamed-chunk-13-1.png)<!-- -->
+
+Show me the development in detail over time
+
+``` r
+gapminder %>% 
+  filter(year %in% c(1962,1972,1982,1992,2002,2012)) %>% 
+  ggplot(aes(fertility, life_expectancy, color = continent)) + 
+  geom_point() + 
+  facet_wrap(.~year)
+```
+
+![](README_figs/README-unnamed-chunk-14-1.png)<!-- -->
+
+Fertility distribution in Europe
+
+``` r
+gapminder %>% 
+  filter(continent == "Europe" & year == 2015) %>% 
+  ggplot(aes(fertility, fill = region)) + 
+  geom_histogram(bins = 20)
+```
+
+![](README_figs/README-unnamed-chunk-15-1.png)<!-- -->
+
+Fertility distribution in Africa by region.
+
+``` r
+gapminder %>% 
+  filter(continent == "Africa" & year == 2015) %>% 
+  ggplot(aes(fertility, fill = region)) + 
+  geom_histogram(bins = 20)
+```
+
+![](README_figs/README-unnamed-chunk-16-1.png)<!-- -->
+
+Fertility distribution compared in Africa and Europe with ggridges
+
+``` r
+gapminder %>% 
+  filter(year == 2015) %>%  
+  ggplot(aes(fertility,continent, fill = continent)) + ggridges::geom_density_ridges(show.legend = F) 
+```
+
+    ## Picking joint bandwidth of 0.315
+
+    ## Warning: Removed 1 rows containing non-finite values (stat_density_ridges).
+
+![](README_figs/README-unnamed-chunk-17-1.png)<!-- -->
+
+Density rigdes on other variable distributions
+
+``` r
+gapminder %>% 
+  filter(year == 2015) %>% # 2015: because latest year with most available data
+  ggplot(aes(life_expectancy,continent, fill = continent)) + 
+  ggridges::geom_density_ridges(show.legend = F)
+```
+
+    ## Picking joint bandwidth of 2.23
+
+![](README_figs/README-unnamed-chunk-18-1.png)<!-- -->
+
+Child mortality distribution continents
+
+``` r
+gapminder %>% 
+  filter(year == 2015) %>%  
+  ggplot(aes(infant_mortality,continent, fill = continent)) + ggridges::geom_density_ridges(show.legend = F) 
+```
+
+    ## Picking joint bandwidth of 4.58
+
+    ## Warning: Removed 7 rows containing non-finite values (stat_density_ridges).
+
+![](README_figs/README-unnamed-chunk-19-1.png)<!-- -->
+
+Population distribution continents
+
+``` r
+gapminder %>% 
+  filter(year == 2015) %>%  
+  ggplot(aes(population,continent, fill = continent)) + 
+  ggridges::geom_density_ridges(show.legend = F) +
+  scale_x_log10()
+```
+
+    ## Picking joint bandwidth of 0.32
+
+![](README_figs/README-unnamed-chunk-20-1.png)<!-- -->
+
+``` r
+# -> Hmmmm, not really useful, I think
+```
+
+GPD densitiy ridges across continents.
+
+``` r
+gapminder %>% 
+  filter(year == 2010) %>%  
+  ggplot(aes(gdp,continent, fill = continent)) + 
+  ggridges::geom_density_ridges(show.legend = F) +
+  scale_x_log10()
+```
+
+    ## Picking joint bandwidth of 0.383
+
+    ## Warning: Removed 9 rows containing non-finite values (stat_density_ridges).
+
+![](README_figs/README-unnamed-chunk-21-1.png)<!-- -->
+
+Boxplots, group difference, two points in time. Life expectancy between
+continents 1962 and 2012.
+
+``` r
+gapminder %>% 
+  filter(year %in% c(1962,2012)) %>% 
+  mutate(year = factor(year, levels = c(1962,2012))) %>% 
+  ggplot(aes(continent,life_expectancy, fill = year)) + 
+  geom_boxplot() + 
+  xlab("Continent") + ylab("Life Expectancy") + 
+  labs(title = "Life expectancy between continents in 1962 and 2012")
+```
+
+![](README_figs/README-unnamed-chunk-22-1.png)<!-- -->
 
 # European Social Survey
 
@@ -143,15 +404,15 @@ Show the variable labels stored in attributes.
 
 ## Variables
 
--   \[wltdffr: Differences in wealth in country, how
-    fair\](<http://nesstar.ess.nsd.uib.no/webview/index.jsp?v=2&submode=variable&study=http%3A%2F%2F129.177.90.83%3A-1%2Fobj%2FfStudy%2FESS9e03.1&gs=undefined&variable=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfVariable%2FESS9e03.1_V518&mode=documentation&top=yes)>
+-   [wltdffr: Differences in wealth in country, how
+    fair](http://nesstar.ess.nsd.uib.no/webview/index.jsp?v=2&submode=variable&study=http%3A%2F%2F129.177.90.83%3A-1%2Fobj%2FfStudy%2FESS9e03.1&gs=undefined&variable=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfVariable%2FESS9e03.1_V518&mode=documentation&top=yes)
 
 -   [poltran: Decisions in country politics are
     transparent](http://nesstar.ess.nsd.uib.no/webview/index.jsp?v=2&submode=variable&study=http%3A%2F%2F129.177.90.83%3A-1%2Fobj%2FfStudy%2FESS9e03.1&gs=undefined&variable=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfVariable%2FESS9e03.1_V518&mode=documentation&top=yes)
 
 -   [grspfr: Would you say your gross pay is unfairly low, fair, or
     unfairly
-    high](%3Chttp://nesstar.ess.nsd.uib.no/webview/index.jsp?v=2&submode=variable&study=http%3A%2F%2F129.177.90.83%3A-1%2Fobj%2FfStudy%2FESS9e03.1&gs=undefined&variable=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfVariable%2FESS9e03.1_V518&mode=documentation&top=yes)
+    high](http://nesstar.ess.nsd.uib.no/webview/index.jsp?v=2&submode=variable&study=http%3A%2F%2F129.177.90.83%3A-1%2Fobj%2FfStudy%2FESS9e03.1&gs=undefined&variable=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfVariable%2FESS9e03.1_V518&mode=documentation&top=yes)
 
 -   [imprich: Important to be rich, have money and expensive
     things](http://nesstar.ess.nsd.uib.no/webview/index.jsp?v=2&submode=variable&study=http%3A%2F%2F129.177.90.83%3A-1%2Fobj%2FfStudy%2FESS9e03.1&gs=undefined&variable=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfVariable%2FESS9e03.1_V518&mode=documentation&top=yes)
@@ -162,7 +423,7 @@ Show the variable labels stored in attributes.
 -   [ipstrgv: Important that government is strong and ensures
     safety](http://nesstar.ess.nsd.uib.no/webview/index.jsp?v=2&submode=variable&study=http%3A%2F%2F129.177.90.83%3A-1%2Fobj%2FfStudy%2FESS9e03.1&gs=undefined&variable=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfVariable%2FESS9e03.1_V518&mode=documentation&top=yes)
 
-## Cases Per Country
+How many subjects were questioned per country?
 
 ``` r
 ess_9 %>% 
@@ -172,12 +433,12 @@ ess_9 %>%
   aes(n, reorder(cntry, n), label = n) + 
   geom_bar(stat = "identity", fill = "steelblue") +
   geom_label() + 
-  ggtitle("Cases per Country")
+  ggtitle("Subjects per Country")
 ```
 
-![](README_figs/README-unnamed-chunk-8-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-28-1.png)<!-- -->
 
-## Bar Graph of time spent with news on politics by country
+How much time do subjects spent watching the news per country?
 
 ``` r
 ess_9 %>% 
@@ -188,11 +449,9 @@ ess_9 %>%
   geom_bar(stat = "identity")
 ```
 
-![](README_figs/README-unnamed-chunk-9-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-29-1.png)<!-- -->
 
-## Differences in wealth in country, how fair?
-
-Here is a bar chart with the given answers.
+A bar graph displaying opinions on differences in wealth.
 
 ``` r
 ess_9 %>% 
@@ -204,7 +463,7 @@ ess_9 %>%
   ylab("Answers")
 ```
 
-![](README_figs/README-unnamed-chunk-10-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-30-1.png)<!-- -->
 
 Here are the results for Germany.
 
@@ -219,9 +478,9 @@ ess_9 %>%
   ylab("Answers")
 ```
 
-![](README_figs/README-unnamed-chunk-11-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-31-1.png)<!-- -->
 
-What are the values and how many are there?
+What are the options and how many are there?
 
 ``` r
 ess_9 %>% 
@@ -261,8 +520,8 @@ ess_9 %>%
     ##  9 Large, extremely unfair  6890
     ## 10 <NA>                     3371
 
-Recode values to only have four left at the end, large unfair, fair,
-small unfair and NAs.
+Recode values to only have four left at the end, too large unfair or
+fair and too small unfair and NAs.
 
 ``` r
 ess_9 = ess_9 %>% 
@@ -294,9 +553,7 @@ d %>%
   ggtitle("Opinion on Differences in Wealth 2018")
 ```
 
-![](README_figs/README-unnamed-chunk-15-1.png)<!-- -->
-
-# 
+![](README_figs/README-unnamed-chunk-35-1.png)<!-- -->
 
 # WDI
 
@@ -362,7 +619,7 @@ dat = WDI(
   start = 1960, end = 2018)
 ```
 
-## Analysis
+## Exploration
 
 ``` r
 # Population Developments
@@ -664,12 +921,11 @@ distinct(dat, country)
     ## 265                                     IDA & IBRD total
     ## 266                                             Zimbabwe
 
-``` r
-# Random Country Line Graph
-dat_1 = dat %>% 
-  slice(-(1:2891)) # All non grouped rows
+## Analysis
 
-# Random Countries Population
+Random countries population.
+
+``` r
 dat %>% 
   filter(country %in% c("Germany","France","United States", "Bosnia and Herzegovina","United Kingdom","China")) %>% 
   ggplot(aes(year,population, color = country)) + 
@@ -679,10 +935,11 @@ dat %>%
   labs(title = "Random Countries Population", color = "Country")
 ```
 
-![](README_figs/README-unnamed-chunk-18-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-39-1.png)<!-- -->
+
+Bosnia’s population development.
 
 ``` r
-# Bosnia Population
 dat %>% 
   filter(country=="Bosnia and Herzegovina") %>% 
   ggplot(aes(year,population)) + geom_bar(stat = "identity") + 
@@ -692,10 +949,11 @@ dat %>%
   xlab("Year") + ylab("Population")
 ```
 
-![](README_figs/README-unnamed-chunk-18-2.png)<!-- -->
+![](README_figs/README-unnamed-chunk-40-1.png)<!-- -->
+
+Balkan population development.
 
 ``` r
-# Balkans Population Developments
 dat %>% 
   filter(country %in% c("Bosnia and Herzegovina","Croatia","Serbia","Montenegro","Slovenia","North Macedonia","Kosovo")) %>% 
   ggplot(aes(year,population, color = reorder(country, desc(population)))) + 
@@ -706,10 +964,11 @@ dat %>%
   xlab("Year") + ylab("Population")
 ```
 
-![](README_figs/README-unnamed-chunk-18-3.png)<!-- -->
+![](README_figs/README-unnamed-chunk-41-1.png)<!-- -->
+
+Balkan GDP development.
 
 ``` r
-# Balkans GDP 
 dat %>% 
   filter(country %in% c("Bosnia and Herzegovina","Croatia","Serbia","Montenegro","Slovenia","North Macedonia","Kosovo")) %>% 
   filter(between(year, 1995, 2020)) %>% 
@@ -723,10 +982,11 @@ dat %>%
 
     ## Warning: Removed 18 row(s) containing missing values (geom_path).
 
-![](README_figs/README-unnamed-chunk-18-4.png)<!-- -->
+![](README_figs/README-unnamed-chunk-42-1.png)<!-- -->
+
+Income share by richest 10% in Germany and the United States.
 
 ``` r
-# Income Share by richest 10%
 dat %>% 
   filter(country %in% c("Germany","United States")) %>% 
   filter(between(year, 1990, 2020)) %>% 
@@ -735,13 +995,11 @@ dat %>%
 
     ## Warning: Removed 4 row(s) containing missing values (geom_path).
 
-![](README_figs/README-unnamed-chunk-18-5.png)<!-- -->
+![](README_figs/README-unnamed-chunk-43-1.png)<!-- -->
 
-# 
+# Star Wars
 
-# Starwars
-
-## Getting To Know The Dataset
+## Exploration
 
 ``` r
 skimr::skim(starwars)
@@ -1321,7 +1579,9 @@ birth_year
 </tbody>
 </table>
 
-## Count and Proportion Table for Gender Distribution
+## Analysis
+
+Count and proportion table for gender distribution.
 
 ``` r
 starwars$gender %>% 
@@ -1352,59 +1612,72 @@ starwars %>%
 
 # Economics
 
+## Analysis
+
+Unemployment over time.
+
 ``` r
 economics %>% 
   ggplot() + geom_line(aes(date, unemploy))
 ```
 
-![](README_figs/README-unnamed-chunk-21-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-46-1.png)<!-- -->
 
 # Heights
 
+## Analysis
+
 ``` r
-## Density vs Normal Distribution 
-library(dslabs)
-male = heights$sex == "Male"
-
-m = mean(heights$height[male])
-s = sd(heights$height[male])
-
-norm_dist = rnorm(812, mean = m, sd = s)
-
-heights[male,] %>% 
-  ggplot(aes(height)) + geom_density(color = "red") + geom_density(aes(norm_dist), color = "blue") + 
-  geom_label(aes(x = 67, y = 0.09, label = "Heights Distribution"), color = "red") 
+# heights[male,] %>%
+#   ggplot(aes(height)) +
+#   geom_density(color = "red") +
+#   geom_density(aes(norm_dist), color = "blue") +
+#   geom_label(aes(x = 67, y = 0.09, label = "Heights Distribution"), color = "red")
 ```
 
-![](README_figs/README-unnamed-chunk-22-1.png)<!-- -->
+``` r
+# ## Density vs Normal Distribution 
+# male = heights$sex == "Male"
+# 
+# m = mean(heights$height[male])
+# s = sd(heights$height[male])
+# 
+# norm_dist = rnorm(812, mean = m, sd = s)
+```
+
+Histogram of female height distribution.
 
 ``` r
-## Histogram 
 heights %>% 
   filter(sex == "Female") %>% 
   ggplot(aes(height)) + 
-  geom_histogram(binwidth = 0.04, color = "black", fill = "pink") + 
+  geom_histogram(color = "black", fill = "red") + 
   xlab("Female height in meters") + ggtitle("Histogram")
 ```
 
-![](README_figs/README-unnamed-chunk-22-2.png)<!-- -->
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+![](README_figs/README-unnamed-chunk-49-1.png)<!-- -->
+
+Boxplot of heights by sex.
 
 ``` r
-## Boxplot 
 heights %>% 
-  ggplot(aes(sex, height)) + geom_boxplot(outlier.shape = NA) + geom_jitter(alpha = 0.5, size = 1)
+  ggplot(aes(sex, height)) + 
+  geom_boxplot(outlier.shape = NA, fill = c("red", "blue")) + 
+  geom_jitter(alpha = 0.5, size = 1)
 ```
 
-![](README_figs/README-unnamed-chunk-22-3.png)<!-- -->
+![](README_figs/README-unnamed-chunk-50-1.png)<!-- -->
+
+QQPlots.
 
 ``` r
-## QQPlot 
-
 heights %>% 
   ggplot(aes(sample = height)) + geom_qq() + stat_qq() + stat_qq_line()
 ```
 
-![](README_figs/README-unnamed-chunk-22-4.png)<!-- -->
+![](README_figs/README-unnamed-chunk-51-1.png)<!-- -->
 
 ``` r
 heights %>% 
@@ -1414,292 +1687,6 @@ heights %>%
   geom_abline()
 ```
 
-![](README_figs/README-unnamed-chunk-22-5.png)<!-- -->
+![](README_figs/README-unnamed-chunk-51-2.png)<!-- -->
 
-``` r
-# Further Examples
-# Boxplot, group male female
-heights %>% 
-  ggplot(aes(sex,height)) + 
-  geom_boxplot(outlier.shape = NA) + 
-  geom_jitter(alpha = 0.25, width = 0.25)
-```
-
-![](README_figs/README-unnamed-chunk-22-6.png)<!-- -->
-
-# Gapminder
-
-``` r
-library(dslabs)
-library(tidyverse)
-library(ggthemes)
-data(gapminder)
-
-# Bosnia Line Graph Life Expectancy
-gapminder %>% 
-  filter(country == "Bosnia and Herzegovina") %>% 
-  ggplot() + 
-  geom_line(aes(year,life_expectancy)) +
-  scale_y_continuous(labels = scales::comma) + 
-  xlab("Year") + ylab("Life Expectancy") + 
-  ggtitle("Line Graph of Bosnia Life Expectancy") + 
-  theme_calc()
-```
-
-![](README_figs/README-unnamed-chunk-23-1.png)<!-- -->
-
-``` r
-# Infant mortality rate by continents
-gapminder %>% 
-  filter(year == 2014) %>% 
-  ggplot() + geom_boxplot(aes(continent, infant_mortality, color = continent), show.legend = F)
-```
-
-    ## Warning: Removed 7 rows containing non-finite values (stat_boxplot).
-
-![](README_figs/README-unnamed-chunk-23-2.png)<!-- -->
-
-``` r
-# What regions are there actually?
-levels(gapminder$region)
-```
-
-    ##  [1] "Australia and New Zealand" "Caribbean"                
-    ##  [3] "Central America"           "Central Asia"             
-    ##  [5] "Eastern Africa"            "Eastern Asia"             
-    ##  [7] "Eastern Europe"            "Melanesia"                
-    ##  [9] "Micronesia"                "Middle Africa"            
-    ## [11] "Northern Africa"           "Northern America"         
-    ## [13] "Northern Europe"           "Polynesia"                
-    ## [15] "South America"             "South-Eastern Asia"       
-    ## [17] "Southern Africa"           "Southern Asia"            
-    ## [19] "Southern Europe"           "Western Africa"           
-    ## [21] "Western Asia"              "Western Europe"
-
-``` r
-# Histogram Europe Population
-gapminder %>% 
-  filter(year == 2015 & region %in% c("Eastern Europe", "Northern Europe", "Southern Europe", "Western Europe")) %>% 
-  ggplot() + geom_histogram(aes(population))
-```
-
-    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-
-![](README_figs/README-unnamed-chunk-23-3.png)<!-- -->
-
-``` r
-# Histogram Europe Population
-gapminder %>% 
-  filter(year == 2015 & continent == "Europe") %>% 
-  ggplot() + geom_histogram(aes(population)) + scale_x_continuous(labels = scales::comma)
-```
-
-    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-
-![](README_figs/README-unnamed-chunk-23-4.png)<!-- -->
-
-``` r
-# Population Bar Graph of Europe
-gapminder %>% 
-  filter(year == 2015 & continent == "Europe") %>% 
-  ggplot(aes(y=reorder(country, population),x = population)) + 
-  geom_bar(stat = "identity") + 
-  scale_x_continuous(labels = scales::comma) + 
-  ggtitle("Bar Graph of European Countries") + 
-  xlab("Population") + 
-  ylab("Country")
-```
-
-![](README_figs/README-unnamed-chunk-23-5.png)<!-- -->
-
-``` r
-# Biggest Life Expectancy Countries in Europe?
-gapminder %>% 
-  filter(year == 2016 & continent == "Europe") %>% 
-  slice_max(life_expectancy, n = 5)
-```
-
-    ##       country year infant_mortality life_expectancy fertility population gdp
-    ## 1     Iceland 2016               NA            83.3        NA         NA  NA
-    ## 2 Switzerland 2016               NA            83.1        NA         NA  NA
-    ## 3       Spain 2016               NA            82.7        NA         NA  NA
-    ## 4       Italy 2016               NA            82.3        NA         NA  NA
-    ## 5  Luxembourg 2016               NA            82.3        NA         NA  NA
-    ##   continent          region
-    ## 1    Europe Northern Europe
-    ## 2    Europe  Western Europe
-    ## 3    Europe Southern Europe
-    ## 4    Europe Southern Europe
-    ## 5    Europe  Western Europe
-
-``` r
-## Bar Graph
-gapminder %>% 
-  filter(year == 2016 & continent == "Europe") %>% 
-  ggplot(aes(y = reorder(country, life_expectancy), x = life_expectancy)) + 
-  geom_bar(stat = "identity") + 
-  coord_cartesian(xlim = c(70,85)) + 
-  xlab("Life Expectancy") + ylab(NULL) + 
-  labs(title = "Life Expectancy in European Countries (2016)", caption = "Gapminder data.")
-```
-
-![](README_figs/README-unnamed-chunk-23-6.png)<!-- -->
-
-``` r
-# Israel in its region
-gapminder %>% 
-  filter(country %in% c("Israel", "Lebanon", "Egypt", "Saudi Arabia", "Bahrain", "West Bank and Gaza", "Yemen", "United Arab Emirate", "Iran", "Syria")) %>% 
-  filter(year == 2009) %>% 
-  ggplot(aes(gdp,country)) + geom_bar(stat = "identity")
-```
-
-    ## Warning: Removed 1 rows containing missing values (position_stack).
-
-![](README_figs/README-unnamed-chunk-23-7.png)<!-- -->
-
-``` r
-# Replication of rafalab github book: fertility on life expectancy
-
-
-# How was fertility and life expectancy in 1962?
-gapminder %>% 
-  filter(year == 1962) %>% 
-  ggplot(aes(fertility, life_expectancy)) + 
-  geom_point()
-```
-
-![](README_figs/README-unnamed-chunk-23-8.png)<!-- -->
-
-``` r
-# How was fertility and life expectancy in 1962 and what are the continents?
-gapminder %>% 
-  filter(year == 1962) %>% 
-  ggplot(aes(fertility, life_expectancy, color = continent)) + 
-  geom_point()
-```
-
-![](README_figs/README-unnamed-chunk-23-9.png)<!-- -->
-
-``` r
-# How was it in 2012 compared to 1962?
-gapminder %>% 
-  filter(year %in% c(1962,2012)) %>% 
-  ggplot(aes(fertility, life_expectancy, color = continent)) + 
-  geom_point() + 
-  facet_grid(.~year)
-```
-
-![](README_figs/README-unnamed-chunk-23-10.png)<!-- -->
-
-``` r
-# Show me the development in detail over time
-gapminder %>% 
-  filter(year %in% c(1962,1972,1982,1992,2002,2012)) %>% 
-  ggplot(aes(fertility, life_expectancy, color = continent)) + 
-  geom_point() + 
-  facet_wrap(.~year)
-```
-
-![](README_figs/README-unnamed-chunk-23-11.png)<!-- -->
-
-``` r
-# fertility distribution in Europe
-gapminder %>% 
-  filter(continent == "Europe" & year == 2015) %>% 
-  ggplot(aes(fertility, fill = region)) + 
-  geom_histogram(bins = 20)
-```
-
-![](README_figs/README-unnamed-chunk-23-12.png)<!-- -->
-
-``` r
-# fertility distribution in Africa
-gapminder %>% 
-  filter(continent == "Africa" & year == 2015) %>% 
-  ggplot(aes(fertility, fill = region)) + 
-  geom_histogram(bins = 20)
-```
-
-![](README_figs/README-unnamed-chunk-23-13.png)<!-- -->
-
-``` r
-# Fertility distribution compared in Africa and Europe with ggridges
-gapminder %>% 
-  filter(year == 2015) %>%  
-  ggplot(aes(fertility,continent, fill = continent)) + ggridges::geom_density_ridges(show.legend = F) 
-```
-
-    ## Picking joint bandwidth of 0.315
-
-    ## Warning: Removed 1 rows containing non-finite values (stat_density_ridges).
-
-![](README_figs/README-unnamed-chunk-23-14.png)<!-- -->
-
-``` r
-# Density rigdes on other variable distributions
-gapminder %>% 
-  filter(year == 2015) %>% # 2015: because latest year with most available data
-  ggplot(aes(life_expectancy,continent, fill = continent)) + 
-  ggridges::geom_density_ridges(show.legend = F)
-```
-
-    ## Picking joint bandwidth of 2.23
-
-![](README_figs/README-unnamed-chunk-23-15.png)<!-- -->
-
-``` r
-# child mortality distribution continents 
-gapminder %>% 
-  filter(year == 2015) %>%  
-  ggplot(aes(infant_mortality,continent, fill = continent)) + ggridges::geom_density_ridges(show.legend = F) 
-```
-
-    ## Picking joint bandwidth of 4.58
-
-    ## Warning: Removed 7 rows containing non-finite values (stat_density_ridges).
-
-![](README_figs/README-unnamed-chunk-23-16.png)<!-- -->
-
-``` r
-# population distribution continents 
-gapminder %>% 
-  filter(year == 2015) %>%  
-  ggplot(aes(population,continent, fill = continent)) + 
-  ggridges::geom_density_ridges(show.legend = F) +
-  scale_x_log10()
-```
-
-    ## Picking joint bandwidth of 0.32
-
-![](README_figs/README-unnamed-chunk-23-17.png)<!-- -->
-
-``` r
-# -> Hmmmm, not really useful, I think
-
-# gdp densitiy ridges across continents
-gapminder %>% 
-  filter(year == 2010) %>%  
-  ggplot(aes(gdp,continent, fill = continent)) + 
-  ggridges::geom_density_ridges(show.legend = F) +
-  scale_x_log10()
-```
-
-    ## Picking joint bandwidth of 0.383
-
-    ## Warning: Removed 9 rows containing non-finite values (stat_density_ridges).
-
-![](README_figs/README-unnamed-chunk-23-18.png)<!-- -->
-
-``` r
-# Boxplots, group difference, two points in time
-# Life expectancy between continents 1962 and 2012
-gapminder %>% 
-  filter(year %in% c(1962,2012)) %>% 
-  mutate(year = factor(year, levels = c(1962,2012))) %>% 
-  ggplot(aes(continent,life_expectancy, fill = year)) + 
-  geom_boxplot() + 
-  xlab("Continent") + ylab("Life Expectancy") + 
-  labs(title = "Life expectancy between continents in 1962 and 2012")
-```
-
-![](README_figs/README-unnamed-chunk-23-19.png)<!-- -->
+# 
