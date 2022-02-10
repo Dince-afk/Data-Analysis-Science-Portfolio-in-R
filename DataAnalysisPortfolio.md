@@ -30,9 +30,6 @@ library(kableExtra)
 
 ``` r
 data(starwars)
-setwd("/Users/dinocuric/Documents/R/Markdown Notebooks/Starwars Dataset Playground")
-saveRDS(starwars, "starwars.rds")
-starwars = readRDS("starwars.rds")
 ```
 
 #### Getting To Know The Dataset
