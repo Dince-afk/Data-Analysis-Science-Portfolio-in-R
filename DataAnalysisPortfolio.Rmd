@@ -1,0 +1,30 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r echo=TRUE}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+data(starwars)
+setwd("/Users/dinocuric/Documents/R/Markdown Notebooks/Starwars Dataset Playground")
+saveRDS(starwars, "starwars.rds")
+starwars = readRDS("starwars.rds")
+```
+
+#### Getting To Know The Dataset
+
+```{r}
+skimr::skim(starwars)
+```
+
+#### Count and Proportion Table for Gender Distribution
+
+```{r}
+starwars$gender %>% 
+  fct_count(sort = T, prop = T)
+
+starwars %>% 
+  count(gender, sex, sort = T)
+```
