@@ -16,34 +16,59 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Starwars
-
-## Getting To Know The Dataset
-
-```{r}
-skimr::skim(starwars)
-```
-
-## Count and Proportion Table for Gender Distribution
-
-```{r}
-starwars$gender %>% 
-  fct_count(sort = T, prop = T)
-
-starwars %>% 
-  count(gender, sex, sort = T)
-```
-
 # European Social Survey Playground
 
-```{r include=FALSE}
-library(tidyverse)
-# setwd("/Users/dinocuric/Documents/R/Markdown Notebooks/ESS Dataset Playground")
-# saveRDS(ess_9, "ess_9.rds")
-ess_9 = readRDS("/Users/dinocuric/Documents/R/Projects/DataAnalysisPortfolio/Data/ess_9.RDS")
+## Data
+
+```{r cache=TRUE}
+library(essurvey)
+
+# Set email. Needed for authentication
+set_email("dino.c@me.com")
+
+# # Show which countries are available
+show_countries()
+
+# Download data
+ess_9 <- import_rounds(9)
 ```
 
-## Get to Know The Dataset
+## Preparation?
+
+```{r}
+# glimpse(ess_9)
+# summary(ess_9)
+att_data = attributes(ess_9)
+# sk = skim(ess_9)
+# 
+# DataExplorer::create_report(ess_9)
+# 
+# helpful_list = list(att_data$var.labels,)
+# 
+#   attributes(ess_9)["var.labels","val.labels"]
+# val_labels = attributes(ess_9)["label.table"]
+# str(ess_9)
+# ess_9$nwspol
+# 
+# ess_9 %>%
+#   group_by(cntry) %>%
+#   summarise(mean_h = mean(nwspol, na.rm = T)) %>%
+#   ggplot() + aes(mean_h, reorder(cntry, mean_h)) + geom_bar(stat = "identity")
+# 
+# attr(ess_9)
+# 
+# # sjlabelled package
+# rm(all_labels_1)
+# all_labels_1 = get_labels(ess_9, attr.only = T)
+# names(all_labels_1) = all_var_labels
+# 
+# # labelled package way
+# var_list = val_labels(ess_9)
+# all_var_labels = unlist(var_label(ess_9))
+# names(all_labels_2) = all_var_labels
+```
+
+## Exploration
 
 Skim to get an overview of the variables.
 
@@ -74,9 +99,9 @@ Show the variable labels stored in attributes.
 
 -   imprich: Important to be rich, have money and expensive things: <http://nesstar.ess.nsd.uib.no/webview/index.jsp?v=2&submode=variable&study=http%3A%2F%2F129.177.90.83%3A-1%2Fobj%2FfStudy%2FESS9e03.1&gs=undefined&variable=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfVariable%2FESS9e03.1_V518&mode=documentation&top=yes>
 
--   **ipeqopt: Important that people are treated equally and have equal opportunities: <http://nesstar.ess.nsd.uib.no/webview/index.jsp?v=2&submode=variable&study=http%3A%2F%2F129.177.90.83%3A-1%2Fobj%2FfStudy%2FESS9e03.1&gs=undefined&variable=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfVariable%2FESS9e03.1_V518&mode=documentation&top=yes>**
+-   ipeqopt: Important that people are treated equally and have equal opportunities: <http://nesstar.ess.nsd.uib.no/webview/index.jsp?v=2&submode=variable&study=http%3A%2F%2F129.177.90.83%3A-1%2Fobj%2FfStudy%2FESS9e03.1&gs=undefined&variable=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfVariable%2FESS9e03.1_V518&mode=documentation&top=yes>
 
--   **ipstrgv: Important that government is strong and ensures safety: <http://nesstar.ess.nsd.uib.no/webview/index.jsp?v=2&submode=variable&study=http%3A%2F%2F129.177.90.83%3A-1%2Fobj%2FfStudy%2FESS9e03.1&gs=undefined&variable=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfVariable%2FESS9e03.1_V518&mode=documentation&top=yes>**
+-   ipstrgv: Important that government is strong and ensures safety: <http://nesstar.ess.nsd.uib.no/webview/index.jsp?v=2&submode=variable&study=http%3A%2F%2F129.177.90.83%3A-1%2Fobj%2FfStudy%2FESS9e03.1&gs=undefined&variable=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfVariable%2FESS9e03.1_V518&mode=documentation&top=yes>
 
 ## Cases Per Country
 
@@ -169,6 +194,110 @@ d %>%
   theme(legend.position = "none") + 
   xlab("Differences in Wealth, Opinon") + ylab("Percentage") + 
   ggtitle("Opinion on Differences in Wealth 2018")
+```
+
+# 
+
+# WDI
+
+## Data
+
+```{r}
+library(WDI)
+```
+
+```{r cache=TRUE}
+# Search for topics in datasets
+head(WDIsearch("co2"), 10)
+
+WDIsearch('gdp.*capita.*constant')
+
+# Download
+dat = WDI(
+  country = "all", 
+  indicator = c(
+  population =  "SP.POP.TOTL", 
+  gdp = "NY.GDP.MKTP.CD",
+  inc_sha_10 = "SI.DST.10TH.10"),
+  start = 1960, end = 2018)
+```
+
+## Analysis
+
+```{r}
+# Population Developments
+summary(dat)
+n_distinct(dat$country)
+distinct(dat, country)
+
+# Random Country Line Graph
+dat_1 = dat %>% 
+  slice(-(1:2891)) # All non grouped rows
+
+# Random Countries Population
+dat %>% 
+  filter(country %in% c("Germany","France","United States", "Bosnia and Herzegovina","United Kingdom","China")) %>% 
+  ggplot(aes(year,population, color = country)) + 
+  geom_line() + 
+  scale_y_log10(labels = scales::comma) + 
+  ylab("Population (log10)") + xlab("Year") + 
+  labs(title = "Random Countries Population", color = "Country")
+
+# Bosnia Population
+dat %>% 
+  filter(country=="Bosnia and Herzegovina") %>% 
+  ggplot(aes(year,population)) + geom_bar(stat = "identity") + 
+  scale_x_continuous(breaks = seq(1960,2020,5)) + 
+  scale_y_continuous(labels = scales::comma) + 
+  labs(title = "Population of Bosnia and Hercegovina") + 
+  xlab("Year") + ylab("Population")
+
+# Balkans Population Developments
+dat %>% 
+  filter(country %in% c("Bosnia and Herzegovina","Croatia","Serbia","Montenegro","Slovenia","North Macedonia","Kosovo")) %>% 
+  ggplot(aes(year,population, color = reorder(country, desc(population)))) + 
+  geom_line() + 
+  scale_x_continuous(breaks = seq(1960,2020,5)) + 
+  scale_y_continuous(labels = scales::comma) + 
+  labs(title = "Population of Former Yugoslav Republics", subtitle = "Population trends and shifts since the 1990s", col = "Countries") + 
+  xlab("Year") + ylab("Population")
+
+# Balkans GDP 
+dat %>% 
+  filter(country %in% c("Bosnia and Herzegovina","Croatia","Serbia","Montenegro","Slovenia","North Macedonia","Kosovo")) %>% 
+  filter(between(year, 1995, 2020)) %>% 
+  ggplot(aes(year,gdp, color = reorder(country, desc(gdp)))) + 
+  geom_line() + 
+  scale_x_continuous(breaks = seq(1960,2020,2)) + 
+  scale_y_continuous(labels = scales::dollar) +
+  labs(title = "GDP of Former Yugoslav Republics", subtitle = "Economic trends and shifts since the 1990s" , col = "Countries") +
+  xlab("Year") + ylab("GDP current US$")
+
+# Income Share by richest 10%
+dat %>% 
+  filter(country %in% c("Germany","United States")) %>% 
+  filter(between(year, 1990, 2020)) %>% 
+  ggplot(aes(year,inc_sha_10, color = country)) + geom_line()
+```
+
+# 
+
+# Starwars
+
+## Getting To Know The Dataset
+
+```{r}
+skimr::skim(starwars)
+```
+
+## Count and Proportion Table for Gender Distribution
+
+```{r}
+starwars$gender %>% 
+  fct_count(sort = T, prop = T)
+
+starwars %>% 
+  count(gender, sex, sort = T)
 ```
 
 # Economics
@@ -378,6 +507,6 @@ gapminder %>%
   mutate(year = factor(year, levels = c(1962,2012))) %>% 
   ggplot(aes(continent,life_expectancy, fill = year)) + 
   geom_boxplot() + 
-  xlab("Continent") + ylab("LIfe Expectancy") + 
+  xlab("Continent") + ylab("Life Expectancy") + 
   labs(title = "Life expectancy between continents in 1962 and 2012")
 ```
