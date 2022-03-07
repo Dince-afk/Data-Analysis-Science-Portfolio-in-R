@@ -5,11 +5,10 @@ This is a compiled showcase of data analysis work I have written in R
 over the years. I love doing with with `tidyverse` and `ggplot2`, and
 rely heavy on its environment.
 
-<<<<<<< HEAD
 Here are some example dataset analysises and my compilation of frequent
 data analysis problems plus their solutions.
 
-# 1. Examples
+# 1. Example Data Analysis
 
 ## Gapminder Dataset
 
@@ -17,13 +16,6 @@ About Gapminder: “Gapminder identifies systematic misconceptions about
 important global trends and proportions and uses reliable data to
 develop easy to understand teaching materials to rid people of their
 misconceptions.”
-=======
-# 1. Example Data Analysis
-
-## Gapminder Dataset
-
-### Exploration and analysis
->>>>>>> 0fed38b752b46f38781891fa26cb4e94a25b2a12
 
 What was the life expectancy in Germany for the last 60 years?
 
@@ -49,14 +41,20 @@ gapminder %>%
   geom_line(aes(year,life_expectancy, group = country, color = country)) +
   scale_y_continuous(labels = scales::comma) + 
   xlab("Year") + ylab("Life Expectancy") + 
-<<<<<<< HEAD
   ggtitle("Life Expectancy in Several Different Countries from 1960 to 2015")
-=======
-  ggtitle("Life Expectancy in Germany from 1960 to 2015")
->>>>>>> 0fed38b752b46f38781891fa26cb4e94a25b2a12
 ```
 
 ![](README_figs/README-unnamed-chunk-4-1.png)<!-- -->
+
+``` r
+  ggtitle("Life Expectancy in Germany from 1960 to 2015")
+```
+
+    ## $title
+    ## [1] "Life Expectancy in Germany from 1960 to 2015"
+    ## 
+    ## attr(,"class")
+    ## [1] "labels"
 
 What are the differences in infant mortality rates by continent?
 
@@ -309,15 +307,8 @@ gapminder %>%
 ```
 
 ![](README_figs/README-unnamed-chunk-20-1.png)<!-- -->
-<<<<<<< HEAD
 
 ## European Social Survey Dataset
-=======
-
-## European Social Survey Dataset
-
-### Require data
->>>>>>> 0fed38b752b46f38781891fa26cb4e94a25b2a12
 
 ``` r
 library(essurvey)
@@ -355,17 +346,12 @@ ess_9 <- import_rounds(9)
     ## Warning: Round 9  was read with the `foreign` package rather than with  the `haven` package for compatibility reasons.
     ##  Please report any issues at https://github.com/ropensci/essurvey/issues
 
-<<<<<<< HEAD
-=======
-### Exploration and analysis
-
 Skim to get an overview of the variables.
 
 ``` r
 # skimr::skim(ess_9)
 ```
 
->>>>>>> 0fed38b752b46f38781891fa26cb4e94a25b2a12
 Glimpse to get a peak at the first values.
 
 ``` r
@@ -389,11 +375,7 @@ head(ess_9)
     ## #   prtvede1 <fct>, prtvede2 <fct>, prtvtddk <fct>, prtvtgee <fct>,
     ## #   prtvtees <fct>, prtvtdfi <fct>, prtvtdfr <fct>, prtvtcgb <fct>, …
 
-<<<<<<< HEAD
 **Interesting variables**
-=======
-### Interesting variables
->>>>>>> 0fed38b752b46f38781891fa26cb4e94a25b2a12
 
 -   [wltdffr: Differences in wealth in country, how
     fair](http://nesstar.ess.nsd.uib.no/webview/index.jsp?v=2&submode=variable&study=http%3A%2F%2F129.177.90.83%3A-1%2Fobj%2FfStudy%2FESS9e03.1&gs=undefined&variable=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfVariable%2FESS9e03.1_V518&mode=documentation&top=yes)
@@ -533,11 +515,6 @@ d %>%
 ![](README_figs/README-unnamed-chunk-30-1.png)<!-- -->
 
 ## WDI Dataset
-<<<<<<< HEAD
-=======
-
-### Require data
->>>>>>> 0fed38b752b46f38781891fa26cb4e94a25b2a12
 
 ``` r
 library(WDI)
@@ -600,11 +577,6 @@ dat = WDI(
   start = 1960, end = 2018)
 ```
 
-<<<<<<< HEAD
-=======
-### Exploration and analysis
-
->>>>>>> 0fed38b752b46f38781891fa26cb4e94a25b2a12
 What was the population development like in these specific countries?
 
 ``` r
