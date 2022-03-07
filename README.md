@@ -1,12 +1,17 @@
-Portfolio: Data Analysis in R
+Portfolio: Data Analysis/Science in R
 ================
 
 This is a compiled showcase of data analysis work I have written in R
 over the years. I love doing with with `tidyverse` and `ggplot2`, and
 rely heavy on its environment.
 
-Here are some example analyses and my compilation of frequent data
-analysis problems plus their solutions.
+Here are some example analyses 1), my compilation of frequent data
+analysis problems plus their solutions 2) and some data
+science/statistics showcases 3).
+
+I have also written and compiled a `bookdown` online book for R and Data
+Analysis/Science for personal use: [Link to
+Book](https://boring-bohr-870977.netlify.app/).
 
 # 1. Example Data Analysis
 
@@ -2303,11 +2308,11 @@ y
 
     ## [1] 12 13 14 15 12
 
-# Data Science / Statistics
+# 3. Data Science / Statistics
 
 ## Central Limit Theorem (Proof)
 
-Let’s create a sampling model and calculate a random statistic for the
+® Let’s create a sampling model and calculate a random statistic for the
 proportion p.
 
 ``` r
@@ -2319,7 +2324,7 @@ x_bar= mean(x)
 x_bar
 ```
 
-    ## [1] 0.38
+    ## [1] 0.37
 
 Now let’s create a Monte Carlo simulation in which we calculate the
 sample statistic p 10,000 times.
@@ -2333,7 +2338,7 @@ x_bar_distribution = replicate(B, {
 head(x_bar_distribution)
 ```
 
-    ## [1] 0.38 0.36 0.38 0.38 0.35 0.49
+    ## [1] 0.44 0.38 0.44 0.44 0.36 0.40
 
 The Central Limit Theorem tells us that when the number of draws, also
 called the *sample size*, is large, the probability distribution of the
@@ -2378,7 +2383,7 @@ falling outside of 3 standard deviations from the mean?
 mean(x_bar_distribution < p - 3 * SE) + mean(x_bar_distribution > p + 3 * SE)
 ```
 
-    ## [1] 0.0026
+    ## [1] 0.0025
 
 ``` r
 pnorm(-3) + 1 - pnorm(3)
@@ -2472,8 +2477,8 @@ The proof from our 10,000 confidence intervals above that did in fact
 capture the true population proportion *p* (0.45) in approximately 95%
 of the time (0.943) tells us that we can create confidence intervals
 from a single sample “with confidence”. In other words, we can in fact
-be sure that a 95% confidence interval constructed from our sample *x̂*
-does include *p* in 95% of the time.
+be sure that a 95% confidence interval constructed from our sample
+$\\\\hat{x}$ does include *p* in 95% of the time.
 
 Here is a single sample from which we will create a 95% confidence
 interval to showcase a more real-life example.
@@ -2579,8 +2584,8 @@ mu
 
     ## [1] 3400.873
 
-Result: The 95% confidence interval for the true population mean *μ* is
-3212.27 to 3816.358 (sample mean is 3514.314).
+Result: The 95% confidence interval for the true population mean
+$\\\\mu$ is 3212.27 to 3816.358 (sample mean is 3514.314).
 
 ``` r
 t.test(x, conf.level = 0.95)$conf.int

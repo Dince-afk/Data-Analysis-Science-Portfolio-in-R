@@ -1,5 +1,5 @@
 ---
-title: "Portfolio: Data Analysis in R"
+title: "Portfolio: Data Analysis/Science in R"
 output: rmarkdown::github_document
 ---
 
@@ -19,7 +19,9 @@ knitr::opts_chunk$set(
 
 This is a compiled showcase of data analysis work I have written in R over the years. I love doing with with `tidyverse` and `ggplot2`, and rely heavy on its environment.
 
-Here are some example analyses and my compilation of frequent data analysis problems plus their solutions.
+Here are some example analyses 1), my compilation of frequent data analysis problems plus their solutions 2) and some data science/statistics showcases 3).
+
+I have also written and compiled a `bookdown` online book for R and Data Analysis/Science for personal use: [Link to Book](https://boring-bohr-870977.netlify.app/).
 
 # 1. Example Data Analysis
 
@@ -731,11 +733,11 @@ y <- as.numeric(as.character(z))
 y
 ```
 
-# Data Science / Statistics
+# 3. Data Science / Statistics
 
 ## Central Limit Theorem (Proof)
 
-Let's create a sampling model and calculate a random statistic for the proportion p.
+® Let's create a sampling model and calculate a random statistic for the proportion p.
 
 ```{r}
 n = 100
@@ -782,7 +784,6 @@ pnorm(-3) + 1 - pnorm(3)
 This does in fact check out! The proportions from the Monte Carlo simulation and the probabilities from the normal distribution function do approximate each other very well. The applications based on these insights alone are somewhat limited.
 
 In real life we rarely have the probabilities for the population parameters. The power does show itself however when making inferences from one single sample, its proportion statistic and its standard deviation, about the population parameter. This is because we now know (experimentally proven) that the sampling distribution of the sample proportion is normally distributed.
-
 
 ## Confidence Intervals (Proof)
 
@@ -841,7 +842,7 @@ ggplot(table, aes(seq_along(x_hats), x_hats)) +
   geom_hline(yintercept = 0.45)
 ```
 
-The proof from our 10,000 confidence intervals above that did in fact capture the true population proportion $p$ (0.45) in approximately 95% of the time (0.943) tells us that we can create confidence intervals from a single sample "with confidence". In other words, we can in fact be sure that a 95% confidence interval constructed from our sample $\hat{x}$ does include $p$ in 95% of the time.
+The proof from our 10,000 confidence intervals above that did in fact capture the true population proportion $p$ (0.45) in approximately 95% of the time (0.943) tells us that we can create confidence intervals from a single sample "with confidence". In other words, we can in fact be sure that a 95% confidence interval constructed from our sample $\\hat{x}$ does include $p$ in 95% of the time.
 
 Here is a single sample from which we will create a 95% confidence interval to showcase a more real-life example.
 
@@ -913,14 +914,8 @@ ci
 mu
 ```
 
-Result: The 95% confidence interval for the true population mean $\mu$ is 3212.27 to 3816.358 (sample mean is 3514.314).
+Result: The 95% confidence interval for the true population mean $\\mu$ is 3212.27 to 3816.358 (sample mean is 3514.314).
 
 ```{r}
 t.test(x, conf.level = 0.95)$conf.int
 ```
-
-
-
-
-
-
