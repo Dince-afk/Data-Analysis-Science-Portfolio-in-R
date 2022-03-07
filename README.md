@@ -5,7 +5,7 @@ Analysis is done with `tidyverse` and `ggplot2`.
 
 # 1. Gapminder Dataset
 
-## Exploration and Analysis
+## Exploration and analysis
 
 What was the life expectancy in Germany for the last 60 years?
 
@@ -275,7 +275,7 @@ gapminder %>%
 
 # 2. European Social Survey Dataset
 
-## Require Data
+## Require data
 
 ``` r
 library(essurvey)
@@ -313,7 +313,7 @@ ess_9 <- import_rounds(9)
     ## Warning: Round 9  was read with the `foreign` package rather than with  the `haven` package for compatibility reasons.
     ##  Please report any issues at https://github.com/ropensci/essurvey/issues
 
-## Exploration and Analysis
+## Exploration and analysis
 
 Skim to get an overview of the variables.
 
@@ -345,7 +345,7 @@ head(ess_9)
     ## #   prtvede1 <fct>, prtvede2 <fct>, prtvtddk <fct>, prtvtgee <fct>,
     ## #   prtvtees <fct>, prtvtdfi <fct>, prtvtdfr <fct>, prtvtcgb <fct>, …
 
-## Interesting Variables
+## Interesting variables
 
 -   [wltdffr: Differences in wealth in country, how
     fair](http://nesstar.ess.nsd.uib.no/webview/index.jsp?v=2&submode=variable&study=http%3A%2F%2F129.177.90.83%3A-1%2Fobj%2FfStudy%2FESS9e03.1&gs=undefined&variable=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfVariable%2FESS9e03.1_V518&mode=documentation&top=yes)
@@ -486,14 +486,15 @@ d %>%
 
 # 3. WDI Dataset
 
-## Require Data
+## Require data
 
 ``` r
 library(WDI)
 ```
 
+Search for topics in datasets.
+
 ``` r
-# Search for topics in datasets
 head(WDIsearch("co2"), 10)
 ```
 
@@ -548,309 +549,9 @@ dat = WDI(
   start = 1960, end = 2018)
 ```
 
-## Exploration and Analysis
+## Exploration and analysis
 
-``` r
-# Population Developments
-summary(dat)
-```
-
-    ##     iso2c             country               year        population       
-    ##  Length:15694       Length:15694       Min.   :1960   Min.   :2.833e+03  
-    ##  Class :character   Class :character   1st Qu.:1974   1st Qu.:9.333e+05  
-    ##  Mode  :character   Mode  :character   Median :1989   Median :6.564e+06  
-    ##                                        Mean   :1989   Mean   :2.080e+08  
-    ##                                        3rd Qu.:2004   3rd Qu.:4.552e+07  
-    ##                                        Max.   :2018   Max.   :7.602e+09  
-    ##                                                       NA's   :99         
-    ##       gdp              inc_sha_10   
-    ##  Min.   :8.824e+06   Min.   :18.3   
-    ##  1st Qu.:2.250e+09   1st Qu.:24.7   
-    ##  Median :1.656e+10   Median :28.2   
-    ##  Mean   :1.055e+12   Mean   :30.1   
-    ##  3rd Qu.:1.987e+11   3rd Qu.:34.3   
-    ##  Max.   :8.627e+13   Max.   :61.5   
-    ##  NA's   :3349        NA's   :13973
-
-``` r
-n_distinct(dat$country)
-```
-
-    ## [1] 266
-
-``` r
-distinct(dat, country)
-```
-
-    ##                                                  country
-    ## 1                                             Arab World
-    ## 2                                                  World
-    ## 3            East Asia & Pacific (excluding high income)
-    ## 4          Europe & Central Asia (excluding high income)
-    ## 5                                             South Asia
-    ## 6                                                Andorra
-    ## 7                                   United Arab Emirates
-    ## 8                                            Afghanistan
-    ## 9                                    Antigua and Barbuda
-    ## 10                                               Albania
-    ## 11                                               Armenia
-    ## 12                                                Angola
-    ## 13                                             Argentina
-    ## 14                                        American Samoa
-    ## 15                                               Austria
-    ## 16                                             Australia
-    ## 17                                                 Aruba
-    ## 18                                            Azerbaijan
-    ## 19                        Central Europe and the Baltics
-    ## 20                                Bosnia and Herzegovina
-    ## 21                                              Barbados
-    ## 22                                            Bangladesh
-    ## 23                                               Belgium
-    ## 24                                          Burkina Faso
-    ## 25                                              Bulgaria
-    ## 26                                               Bahrain
-    ## 27                                               Burundi
-    ## 28                                                 Benin
-    ## 29                                               Bermuda
-    ## 30                                     Brunei Darussalam
-    ## 31                                               Bolivia
-    ## 32                                                Brazil
-    ## 33                                          Bahamas, The
-    ## 34                                                Bhutan
-    ## 35                                              Botswana
-    ## 36                                               Belarus
-    ## 37                                                Belize
-    ## 38                                                Canada
-    ## 39                                      Congo, Dem. Rep.
-    ## 40                              Central African Republic
-    ## 41                                           Congo, Rep.
-    ## 42                                           Switzerland
-    ## 43                                         Cote d'Ivoire
-    ## 44                                                 Chile
-    ## 45                                              Cameroon
-    ## 46                                                 China
-    ## 47                                              Colombia
-    ## 48                                            Costa Rica
-    ## 49                                                  Cuba
-    ## 50                                            Cabo Verde
-    ## 51                                               Curacao
-    ## 52                                                Cyprus
-    ## 53                                        Czech Republic
-    ## 54                                               Germany
-    ## 55                                              Djibouti
-    ## 56                                               Denmark
-    ## 57                                              Dominica
-    ## 58                                    Dominican Republic
-    ## 59                                               Algeria
-    ## 60                                               Ecuador
-    ## 61                                               Estonia
-    ## 62                                      Egypt, Arab Rep.
-    ## 63                                               Eritrea
-    ## 64                                                 Spain
-    ## 65                                              Ethiopia
-    ## 66                                        European Union
-    ## 67              Fragile and conflict affected situations
-    ## 68                                               Finland
-    ## 69                                                  Fiji
-    ## 70                                 Micronesia, Fed. Sts.
-    ## 71                                         Faroe Islands
-    ## 72                                                France
-    ## 73                                                 Gabon
-    ## 74                                        United Kingdom
-    ## 75                                               Grenada
-    ## 76                                               Georgia
-    ## 77                                                 Ghana
-    ## 78                                             Gibraltar
-    ## 79                                             Greenland
-    ## 80                                           Gambia, The
-    ## 81                                                Guinea
-    ## 82                                     Equatorial Guinea
-    ## 83                                                Greece
-    ## 84                                             Guatemala
-    ## 85                                                  Guam
-    ## 86                                         Guinea-Bissau
-    ## 87                                                Guyana
-    ## 88                                  Hong Kong SAR, China
-    ## 89                                              Honduras
-    ## 90                                               Croatia
-    ## 91                                                 Haiti
-    ## 92                                               Hungary
-    ## 93                                             Indonesia
-    ## 94                                               Ireland
-    ## 95                                                Israel
-    ## 96                                           Isle of Man
-    ## 97                                                 India
-    ## 98                                                  Iraq
-    ## 99                                    Iran, Islamic Rep.
-    ## 100                                              Iceland
-    ## 101                                                Italy
-    ## 102                                      Channel Islands
-    ## 103                                              Jamaica
-    ## 104                                               Jordan
-    ## 105                                                Japan
-    ## 106                                                Kenya
-    ## 107                                      Kyrgyz Republic
-    ## 108                                             Cambodia
-    ## 109                                             Kiribati
-    ## 110                                              Comoros
-    ## 111                                  St. Kitts and Nevis
-    ## 112                            Korea, Dem. People's Rep.
-    ## 113                                          Korea, Rep.
-    ## 114                                               Kuwait
-    ## 115                                       Cayman Islands
-    ## 116                                           Kazakhstan
-    ## 117                                              Lao PDR
-    ## 118                                              Lebanon
-    ## 119                                            St. Lucia
-    ## 120                                        Liechtenstein
-    ## 121                                            Sri Lanka
-    ## 122                                              Liberia
-    ## 123                                              Lesotho
-    ## 124                                            Lithuania
-    ## 125                                           Luxembourg
-    ## 126                                               Latvia
-    ## 127                                                Libya
-    ## 128                                              Morocco
-    ## 129                                               Monaco
-    ## 130                                              Moldova
-    ## 131                                           Montenegro
-    ## 132                             St. Martin (French part)
-    ## 133                                           Madagascar
-    ## 134                                     Marshall Islands
-    ## 135                                      North Macedonia
-    ## 136                                                 Mali
-    ## 137                                              Myanmar
-    ## 138                                             Mongolia
-    ## 139                                     Macao SAR, China
-    ## 140                             Northern Mariana Islands
-    ## 141                                           Mauritania
-    ## 142                                                Malta
-    ## 143                                            Mauritius
-    ## 144                                             Maldives
-    ## 145                                               Malawi
-    ## 146                                               Mexico
-    ## 147                                             Malaysia
-    ## 148                                           Mozambique
-    ## 149                                              Namibia
-    ## 150                                        New Caledonia
-    ## 151                                                Niger
-    ## 152                                              Nigeria
-    ## 153                                            Nicaragua
-    ## 154                                          Netherlands
-    ## 155                                               Norway
-    ## 156                                                Nepal
-    ## 157                                                Nauru
-    ## 158                                          New Zealand
-    ## 159                                         OECD members
-    ## 160                                                 Oman
-    ## 161                                               Panama
-    ## 162                                                 Peru
-    ## 163                                     French Polynesia
-    ## 164                                     Papua New Guinea
-    ## 165                                          Philippines
-    ## 166                                             Pakistan
-    ## 167                                               Poland
-    ## 168                                          Puerto Rico
-    ## 169                                   West Bank and Gaza
-    ## 170                                             Portugal
-    ## 171                                                Palau
-    ## 172                                             Paraguay
-    ## 173                                                Qatar
-    ## 174                                              Romania
-    ## 175                                               Serbia
-    ## 176                                   Russian Federation
-    ## 177                                               Rwanda
-    ## 178                                         Small states
-    ## 179                          Pacific island small states
-    ## 180                               Caribbean small states
-    ## 181                                   Other small states
-    ## 182                                         Saudi Arabia
-    ## 183                                      Solomon Islands
-    ## 184                                           Seychelles
-    ## 185                                                Sudan
-    ## 186                                               Sweden
-    ## 187                                            Singapore
-    ## 188                                             Slovenia
-    ## 189                                      Slovak Republic
-    ## 190                                         Sierra Leone
-    ## 191                                           San Marino
-    ## 192                                              Senegal
-    ## 193                                              Somalia
-    ## 194                                             Suriname
-    ## 195                                          South Sudan
-    ## 196                                Sao Tome and Principe
-    ## 197                                          El Salvador
-    ## 198                            Sint Maarten (Dutch part)
-    ## 199                                 Syrian Arab Republic
-    ## 200                                             Eswatini
-    ## 201 Latin America & the Caribbean (IDA & IBRD countries)
-    ## 202    Middle East & North Africa (IDA & IBRD countries)
-    ## 203           East Asia & Pacific (IDA & IBRD countries)
-    ## 204                              South Asia (IDA & IBRD)
-    ## 205            Sub-Saharan Africa (IDA & IBRD countries)
-    ## 206         Europe & Central Asia (IDA & IBRD countries)
-    ## 207                             Turks and Caicos Islands
-    ## 208                                                 Chad
-    ## 209                                                 Togo
-    ## 210                                             Thailand
-    ## 211                                           Tajikistan
-    ## 212                                          Timor-Leste
-    ## 213                                         Turkmenistan
-    ## 214                                              Tunisia
-    ## 215                                                Tonga
-    ## 216                                               Turkey
-    ## 217                                  Trinidad and Tobago
-    ## 218                                               Tuvalu
-    ## 219                                             Tanzania
-    ## 220                                              Ukraine
-    ## 221                                               Uganda
-    ## 222                                        United States
-    ## 223                                              Uruguay
-    ## 224                                           Uzbekistan
-    ## 225                             Pre-demographic dividend
-    ## 226                           Early-demographic dividend
-    ## 227                            Late-demographic dividend
-    ## 228                            Post-demographic dividend
-    ## 229                       St. Vincent and the Grenadines
-    ## 230                                        Venezuela, RB
-    ## 231                               British Virgin Islands
-    ## 232                                Virgin Islands (U.S.)
-    ## 233                                              Vietnam
-    ## 234                                              Vanuatu
-    ## 235                                                Samoa
-    ## 236                                            Euro area
-    ## 237                                          High income
-    ## 238               Heavily indebted poor countries (HIPC)
-    ## 239                                            IBRD only
-    ## 240                                            IDA total
-    ## 241                                            IDA blend
-    ## 242                                             IDA only
-    ## 243    Latin America & Caribbean (excluding high income)
-    ## 244                                               Kosovo
-    ## 245         Least developed countries: UN classification
-    ## 246                                           Low income
-    ## 247                                  Lower middle income
-    ## 248                                  Low & middle income
-    ## 249                                        Middle income
-    ## 250   Middle East & North Africa (excluding high income)
-    ## 251                                  Upper middle income
-    ## 252                                        North America
-    ## 253                                       Not classified
-    ## 254                                          Yemen, Rep.
-    ## 255                                  East Asia & Pacific
-    ## 256                                Europe & Central Asia
-    ## 257                                         South Africa
-    ## 258           Sub-Saharan Africa (excluding high income)
-    ## 259                                   Sub-Saharan Africa
-    ## 260                          Africa Eastern and Southern
-    ## 261                           Africa Western and Central
-    ## 262                            Latin America & Caribbean
-    ## 263                                               Zambia
-    ## 264                           Middle East & North Africa
-    ## 265                                     IDA & IBRD total
-    ## 266                                             Zimbabwe
-
-Random countries population.
+What was the population development like in these specific countries?
 
 ``` r
 dat %>% 
@@ -862,23 +563,10 @@ dat %>%
   labs(title = "Random Countries Population", color = "Country")
 ```
 
-![](README_figs/README-unnamed-chunk-33-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-32-1.png)<!-- -->
 
-Bosnia’s population development.
-
-``` r
-dat %>% 
-  filter(country=="Bosnia and Herzegovina") %>% 
-  ggplot(aes(year,population)) + geom_bar(stat = "identity") + 
-  scale_x_continuous(breaks = seq(1960,2020,5)) + 
-  scale_y_continuous(labels = scales::comma) + 
-  labs(title = "Population of Bosnia and Hercegovina") + 
-  xlab("Year") + ylab("Population")
-```
-
-![](README_figs/README-unnamed-chunk-34-1.png)<!-- -->
-
-Balkan population development.
+What was the population development like in the former Yugoslav
+Republics?
 
 ``` r
 dat %>% 
@@ -891,9 +579,9 @@ dat %>%
   xlab("Year") + ylab("Population")
 ```
 
-![](README_figs/README-unnamed-chunk-35-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-33-1.png)<!-- -->
 
-Balkan GDP development.
+What was the development of GDP in the former Yugoslav Republics?
 
 ``` r
 dat %>% 
@@ -909,17 +597,1692 @@ dat %>%
 
     ## Warning: Removed 18 row(s) containing missing values (geom_path).
 
-![](README_figs/README-unnamed-chunk-36-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-34-1.png)<!-- -->
 
-Income share by richest 10% in Germany and the United States.
+# Frequent Data Analysis Problems + Solutions
+
+## First exploration of new dataset
+
+The `skim()`shows how many missing and unique values each variable has.
+It uses appropriate measures to describe each variable based on its
+type: character, numeric or list.
 
 ``` r
-dat %>% 
-  filter(country %in% c("Germany","United States")) %>% 
-  filter(between(year, 1990, 2020)) %>% 
-  ggplot(aes(year,inc_sha_10, color = country)) + geom_line()
+skimr::skim(starwars)
 ```
 
-    ## Warning: Removed 4 row(s) containing missing values (geom_path).
+<table style="width: auto;" class="table table-condensed">
+<caption>
+Data summary
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Name
+</td>
+<td style="text-align:left;">
+starwars
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Number of rows
+</td>
+<td style="text-align:left;">
+87
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Number of columns
+</td>
+<td style="text-align:left;">
+14
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Column type frequency:
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+character
+</td>
+<td style="text-align:left;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+list
+</td>
+<td style="text-align:left;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Group variables
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+</tbody>
+</table>
 
-![](README_figs/README-unnamed-chunk-37-1.png)<!-- -->
+**Variable type: character**
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+skim_variable
+</th>
+<th style="text-align:right;">
+n_missing
+</th>
+<th style="text-align:right;">
+complete_rate
+</th>
+<th style="text-align:right;">
+min
+</th>
+<th style="text-align:right;">
+max
+</th>
+<th style="text-align:right;">
+empty
+</th>
+<th style="text-align:right;">
+n_unique
+</th>
+<th style="text-align:right;">
+whitespace
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+name
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+87
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+hair_color
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0.94
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+skin_color
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+31
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+eye_color
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sex
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+gender
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+homeworld
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.89
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+48
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+species
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+37
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+
+**Variable type: list**
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+skim_variable
+</th>
+<th style="text-align:right;">
+n_missing
+</th>
+<th style="text-align:right;">
+complete_rate
+</th>
+<th style="text-align:right;">
+n_unique
+</th>
+<th style="text-align:right;">
+min_length
+</th>
+<th style="text-align:right;">
+max_length
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+films
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+24
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+vehicles
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+starships
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+</tbody>
+</table>
+
+**Variable type: numeric**
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+skim_variable
+</th>
+<th style="text-align:right;">
+n_missing
+</th>
+<th style="text-align:right;">
+complete_rate
+</th>
+<th style="text-align:right;">
+mean
+</th>
+<th style="text-align:right;">
+sd
+</th>
+<th style="text-align:right;">
+p0
+</th>
+<th style="text-align:right;">
+p25
+</th>
+<th style="text-align:right;">
+p50
+</th>
+<th style="text-align:right;">
+p75
+</th>
+<th style="text-align:right;">
+p100
+</th>
+<th style="text-align:left;">
+hist
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+height
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0.93
+</td>
+<td style="text-align:right;">
+174.36
+</td>
+<td style="text-align:right;">
+34.77
+</td>
+<td style="text-align:right;">
+66
+</td>
+<td style="text-align:right;">
+167.0
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+191.0
+</td>
+<td style="text-align:right;">
+264
+</td>
+<td style="text-align:left;">
+▁▁▇▅▁
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mass
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:right;">
+0.68
+</td>
+<td style="text-align:right;">
+97.31
+</td>
+<td style="text-align:right;">
+169.46
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+55.6
+</td>
+<td style="text-align:right;">
+79
+</td>
+<td style="text-align:right;">
+84.5
+</td>
+<td style="text-align:right;">
+1358
+</td>
+<td style="text-align:left;">
+▇▁▁▁▁
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+birth_year
+</td>
+<td style="text-align:right;">
+44
+</td>
+<td style="text-align:right;">
+0.49
+</td>
+<td style="text-align:right;">
+87.57
+</td>
+<td style="text-align:right;">
+154.69
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+35.0
+</td>
+<td style="text-align:right;">
+52
+</td>
+<td style="text-align:right;">
+72.0
+</td>
+<td style="text-align:right;">
+896
+</td>
+<td style="text-align:left;">
+▇▁▁▁▁
+</td>
+</tr>
+</tbody>
+</table>
+
+The glimpse function, on the other hand, gives us a good peak at the
+first raw values each variable has.
+
+``` r
+glimpse(starwars)
+```
+
+    ## Rows: 87
+    ## Columns: 14
+    ## $ name       <chr> "Luke Skywalker", "C-3PO", "R2-D2", "Darth Vader", "Leia Or…
+    ## $ height     <int> 172, 167, 96, 202, 150, 178, 165, 97, 183, 182, 188, 180, 2…
+    ## $ mass       <dbl> 77.0, 75.0, 32.0, 136.0, 49.0, 120.0, 75.0, 32.0, 84.0, 77.…
+    ## $ hair_color <chr> "blond", NA, NA, "none", "brown", "brown, grey", "brown", N…
+    ## $ skin_color <chr> "fair", "gold", "white, blue", "white", "light", "light", "…
+    ## $ eye_color  <chr> "blue", "yellow", "red", "yellow", "brown", "blue", "blue",…
+    ## $ birth_year <dbl> 19.0, 112.0, 33.0, 41.9, 19.0, 52.0, 47.0, NA, 24.0, 57.0, …
+    ## $ sex        <chr> "male", "none", "none", "male", "female", "male", "female",…
+    ## $ gender     <chr> "masculine", "masculine", "masculine", "masculine", "femini…
+    ## $ homeworld  <chr> "Tatooine", "Tatooine", "Naboo", "Tatooine", "Alderaan", "T…
+    ## $ species    <chr> "Human", "Droid", "Droid", "Human", "Human", "Human", "Huma…
+    ## $ films      <list> <"The Empire Strikes Back", "Revenge of the Sith", "Return…
+    ## $ vehicles   <list> <"Snowspeeder", "Imperial Speeder Bike">, <>, <>, <>, "Imp…
+    ## $ starships  <list> <"X-wing", "Imperial shuttle">, <>, <>, "TIE Advanced x1",…
+
+## A Count and prop table
+
+**First way with `forcats::fct_count()`** Calculates a count and prop
+table.
+
+``` r
+starwars$sex %>%
+ factor() %>% 
+  fct_count(sort = T, prop = T)
+```
+
+    ## # A tibble: 5 × 3
+    ##   f                  n      p
+    ##   <fct>          <int>  <dbl>
+    ## 1 male              60 0.690 
+    ## 2 female            16 0.184 
+    ## 3 none               6 0.0690
+    ## 4 <NA>               4 0.0460
+    ## 5 hermaphroditic     1 0.0115
+
+**Second way with `deplyr::count()`** Simply mutate a frequency and
+percentage column on a counted table.
+
+``` r
+starwars %>% 
+ count(sex) %>% 
+  mutate(freq = n / sum(n)) %>% 
+  mutate(perc = freq * 100)
+```
+
+    ## # A tibble: 5 × 4
+    ##   sex                n   freq  perc
+    ##   <chr>          <int>  <dbl> <dbl>
+    ## 1 female            16 0.184  18.4 
+    ## 2 hermaphroditic     1 0.0115  1.15
+    ## 3 male              60 0.690  69.0 
+    ## 4 none               6 0.0690  6.90
+    ## 5 <NA>               4 0.0460  4.60
+
+## Bar graph with count data
+
+Here is a situation where we calculated a count table for hair color -
+we summarized all values. If we then want to plot a bar graph based on
+that count table we run into problems, because ggplot2 is expecting a
+non-summarized or normal data frame.
+
+``` r
+hair_color_table = starwars %>% 
+  mutate(hair_color = fct_lump_min(hair_color, 2)) %>% 
+  group_by(hair_color) %>% 
+  summarise(n = n())
+hair_color_table
+```
+
+    ## # A tibble: 7 × 2
+    ##   hair_color     n
+    ##   <fct>      <int>
+    ## 1 black         13
+    ## 2 blond          3
+    ## 3 brown         18
+    ## 4 none          37
+    ## 5 white          4
+    ## 6 Other          7
+    ## 7 <NA>           5
+
+To tell the function that we have already summarized data, we add the
+argument `stat = "identity"` to the `geom_bar()` function.
+
+``` r
+hair_color_table %>% 
+  ggplot(aes(x = reorder(hair_color, n), y = n, fill = hair_color)) + 
+  geom_bar(stat = "identity") + 
+  theme(legend.position = "none")
+```
+
+![](README_figs/README-unnamed-chunk-40-1.png)<!-- -->
+
+## Bar graph with percentage labels
+
+First we create a table with counts and percentages:
+
+``` r
+d = starwars %>% 
+  group_by(gender) %>% 
+  summarise(count = n()) %>% 
+  mutate(percentage = count/sum(count))
+d
+```
+
+    ## # A tibble: 3 × 3
+    ##   gender    count percentage
+    ##   <chr>     <int>      <dbl>
+    ## 1 feminine     17     0.195 
+    ## 2 masculine    66     0.759 
+    ## 3 <NA>          4     0.0460
+
+Then we plot a graph with bar and with percentage labels.
+
+``` r
+d %>% 
+  ggplot(aes(gender, percentage, label = round(percentage, 2), fill = gender)) + 
+  geom_bar(stat = "identity") + 
+  geom_label(aes(fill = NA), fill = "white") + 
+  theme(legend.position = "none")
+```
+
+![](README_figs/README-unnamed-chunk-42-1.png)<!-- -->
+
+## Collapse factors to „Other”
+
+This syntax mutates the categorical variable homeworld into eight of its
+most frequent values. The other values are being collapsed into the
+categorical value „other”.
+
+``` r
+starwars %>% 
+  mutate(homeworld = fct_lump_n(homeworld, n = 8)) %>% 
+  group_by(homeworld) %>% 
+  summarise(mean(height, na.rm =T), mean(mass, na.rm = T), n())
+```
+
+    ## # A tibble: 11 × 4
+    ##    homeworld `mean(height, na.rm = T)` `mean(mass, na.rm = T)` `n()`
+    ##    <fct>                         <dbl>                   <dbl> <int>
+    ##  1 Alderaan                       176.                    64       3
+    ##  2 Corellia                       175                     78.5     2
+    ##  3 Coruscant                      174.                    50       3
+    ##  4 Kamino                         208.                    83.1     3
+    ##  5 Kashyyyk                       231                    124       2
+    ##  6 Mirial                         168                     53.1     2
+    ##  7 Naboo                          175.                    64.2    11
+    ##  8 Ryloth                         179                     55       2
+    ##  9 Tatooine                       170.                    85.4    10
+    ## 10 Other                          173.                   117.     39
+    ## 11 <NA>                           139.                    82      10
+
+## Filter for specific values
+
+We can easily filter out cases with certain column values, like for
+example the states of Hawai and Alaska. We use `filter()`, the operator
+`!` and `%in%`.
+
+``` r
+starwars %>% 
+  filter(!homeworld%in%c("Tatooine","Naboo")) %>% 
+  select(name, homeworld)
+```
+
+    ## # A tibble: 66 × 2
+    ##    name                  homeworld 
+    ##    <chr>                 <chr>     
+    ##  1 Leia Organa           Alderaan  
+    ##  2 Obi-Wan Kenobi        Stewjon   
+    ##  3 Wilhuff Tarkin        Eriadu    
+    ##  4 Chewbacca             Kashyyyk  
+    ##  5 Han Solo              Corellia  
+    ##  6 Greedo                Rodia     
+    ##  7 Jabba Desilijic Tiure Nal Hutta 
+    ##  8 Wedge Antilles        Corellia  
+    ##  9 Jek Tono Porkins      Bestine IV
+    ## 10 Yoda                  <NA>      
+    ## # … with 56 more rows
+
+## Change bar colors in barplot
+
+You can manually pick the colors with `fill` and a vector containing the
+color values. Either in String, written out.
+
+``` r
+starwars %>% 
+  mutate(sex = fct_infreq(sex)) %>% 
+  ggplot(aes(sex)) + 
+  geom_bar(fill = c("red","blue","green","black","grey")) 
+```
+
+![](README_figs/README-unnamed-chunk-45-1.png)<!-- -->
+
+Or with RGB Color Codes.
+
+``` r
+starwars %>% 
+    mutate(sex = fct_infreq(sex)) %>%
+    ggplot(aes(sex)) +
+    geom_bar(fill = c("#003f5c","#58508d","#bc5090","#ff6361","#ffa600")) 
+```
+
+![](README_figs/README-unnamed-chunk-46-1.png)<!-- -->
+
+## Hide aes(color) mapping legend
+
+Here is an example where we want the bar colored based on the variable
+itself, but without the mapping legend.
+
+``` r
+starwars %>% 
+  mutate(sex = fct_infreq(sex)) %>% 
+  ggplot(aes(sex, fill = sex)) + 
+  geom_bar()
+```
+
+![](README_figs/README-unnamed-chunk-47-1.png)<!-- -->
+
+Hide the geom_bar legend.
+
+``` r
+starwars %>% 
+  mutate(sex = fct_infreq(sex)) %>% 
+  ggplot(aes(sex, fill = sex)) + 
+  geom_bar(show.legend = F)
+```
+
+![](README_figs/README-unnamed-chunk-48-1.png)<!-- -->
+
+Remove just the legend title:
+
+``` r
+starwars %>% 
+  mutate(sex = fct_infreq(sex)) %>% 
+  ggplot(aes(sex, fill = sex)) + 
+  geom_bar() +
+  theme(legend.title = element_blank())
+```
+
+![](README_figs/README-unnamed-chunk-49-1.png)<!-- -->
+
+Hide all legends created:
+
+``` r
+starwars %>% 
+  mutate(sex = fct_infreq(sex)) %>% 
+  ggplot(aes(sex, fill = sex)) + 
+  geom_bar() +
+  theme(legend.position = "none")
+```
+
+![](README_figs/README-unnamed-chunk-50-1.png)<!-- -->
+
+## Re-code values of categorical variables
+
+**First way** We can use `fct_collapse()`to create a new column with the
+new recoded values in it.
+
+**Second way** By using `mutate`, to create a new column with our own
+values and `case_when`, to run through our observations looking for
+defined cases, together with “variable” `%in%`, we can create our own
+groups.
+
+``` r
+gapminder %>% 
+ mutate(group = case_when(
+    region %in% c("Western Europe", "Northern Europe","Southern Europe","Northern America", "Australia and New Zealand") ~ "West", # If region is one of values -> assign it "West" in new group column.
+    region %in% c("Eastern Asia", "South-Eastern Asia") ~ "East Asia",
+    region %in% c("Caribbean", "Central America", "South America") ~ "Latin America",
+    continent == "Africa" & 
+      region != "Northern Africa" ~ "Sub-Saharan",
+    TRUE ~ "Others")) %>%  # If nothing above applies -> assign it "Others" in group column
+  head(10)
+```
+
+    ##                country year infant_mortality life_expectancy fertility
+    ## 1              Albania 1960           115.40           62.87      6.19
+    ## 2              Algeria 1960           148.20           47.50      7.65
+    ## 3               Angola 1960           208.00           35.98      7.32
+    ## 4  Antigua and Barbuda 1960               NA           62.97      4.43
+    ## 5            Argentina 1960            59.87           65.39      3.11
+    ## 6              Armenia 1960               NA           66.86      4.55
+    ## 7                Aruba 1960               NA           65.66      4.82
+    ## 8            Australia 1960            20.30           70.87      3.45
+    ## 9              Austria 1960            37.30           68.75      2.70
+    ## 10          Azerbaijan 1960               NA           61.33      5.57
+    ##    population          gdp continent                    region         group
+    ## 1     1636054           NA    Europe           Southern Europe          West
+    ## 2    11124892  13828152297    Africa           Northern Africa        Others
+    ## 3     5270844           NA    Africa             Middle Africa   Sub-Saharan
+    ## 4       54681           NA  Americas                 Caribbean Latin America
+    ## 5    20619075 108322326649  Americas             South America Latin America
+    ## 6     1867396           NA      Asia              Western Asia        Others
+    ## 7       54208           NA  Americas                 Caribbean Latin America
+    ## 8    10292328  96677859364   Oceania Australia and New Zealand          West
+    ## 9     7065525  52392699681    Europe            Western Europe          West
+    ## 10    3897889           NA      Asia              Western Asia        Others
+
+We turn this `group` variable into a factor to control the order of the
+levels:
+
+## Order color legend
+
+Order color legend by a variable’s values.
+
+## Show unique values
+
+Display all unique values of variable.
+
+``` r
+distinct(starwars, species) # dplyr function
+```
+
+    ## # A tibble: 38 × 1
+    ##    species       
+    ##    <chr>         
+    ##  1 Human         
+    ##  2 Droid         
+    ##  3 Wookiee       
+    ##  4 Rodian        
+    ##  5 Hutt          
+    ##  6 Yoda's species
+    ##  7 Trandoshan    
+    ##  8 Mon Calamari  
+    ##  9 Ewok          
+    ## 10 Sullustan     
+    ## # … with 28 more rows
+
+**Note**: `distinct(dat$countries)` doesn’t work.
+
+## Slice rows by maximum or minimum values
+
+**Note:** parameter `n` must be explicitly written, otherwise it throws
+an error.
+
+``` r
+starwars %>% 
+  slice_max(height, n = 5)
+```
+
+    ## # A tibble: 5 × 14
+    ##   name     height  mass hair_color skin_color eye_color birth_year sex   gender 
+    ##   <chr>     <int> <dbl> <chr>      <chr>      <chr>          <dbl> <chr> <chr>  
+    ## 1 Yarael …    264    NA none       white      yellow            NA male  mascul…
+    ## 2 Tarfful     234   136 brown      brown      blue              NA male  mascul…
+    ## 3 Lama Su     229    88 none       grey       black             NA male  mascul…
+    ## 4 Chewbac…    228   112 brown      unknown    blue             200 male  mascul…
+    ## 5 Roos Ta…    224    82 none       grey       orange            NA male  mascul…
+    ## # … with 5 more variables: homeworld <chr>, species <chr>, films <list>,
+    ## #   vehicles <list>, starships <list>
+
+Show me 5% of the lowest height rows.
+
+``` r
+starwars %>% 
+  slice_min(height, prop = 0.05)
+```
+
+    ## # A tibble: 4 × 14
+    ##   name      height  mass hair_color skin_color eye_color birth_year sex   gender
+    ##   <chr>      <int> <dbl> <chr>      <chr>      <chr>          <dbl> <chr> <chr> 
+    ## 1 Yoda          66    17 white      green      brown            896 male  mascu…
+    ## 2 Ratts Ty…     79    15 none       grey, blue unknown           NA male  mascu…
+    ## 3 Wicket S…     88    20 brown      brown      brown              8 male  mascu…
+    ## 4 Dud Bolt      94    45 none       blue, grey yellow            NA male  mascu…
+    ## # … with 5 more variables: homeworld <chr>, species <chr>, films <list>,
+    ## #   vehicles <list>, starships <list>
+
+## Show Number of `NA`s
+
+For a quick check of how many missing values there are in a single
+column:
+
+``` r
+sum(is.na(starwars$height))
+```
+
+    ## [1] 6
+
+And how many are not `NA`s.
+
+``` r
+sum(!is.na(starwars$height))
+```
+
+    ## [1] 81
+
+For a more detailed overview of the whole dataset use `skim()`. It shows
+a very useful `complete_rate` which tells us how much of the column is
+disturbed by missing values.
+
+``` r
+skimr::skim(starwars)
+```
+
+<table style="width: auto;" class="table table-condensed">
+<caption>
+Data summary
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Name
+</td>
+<td style="text-align:left;">
+starwars
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Number of rows
+</td>
+<td style="text-align:left;">
+87
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Number of columns
+</td>
+<td style="text-align:left;">
+14
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Column type frequency:
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+character
+</td>
+<td style="text-align:left;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+list
+</td>
+<td style="text-align:left;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Group variables
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+</tbody>
+</table>
+
+**Variable type: character**
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+skim_variable
+</th>
+<th style="text-align:right;">
+n_missing
+</th>
+<th style="text-align:right;">
+complete_rate
+</th>
+<th style="text-align:right;">
+min
+</th>
+<th style="text-align:right;">
+max
+</th>
+<th style="text-align:right;">
+empty
+</th>
+<th style="text-align:right;">
+n_unique
+</th>
+<th style="text-align:right;">
+whitespace
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+name
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+87
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+hair_color
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0.94
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+skin_color
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+31
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+eye_color
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sex
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+gender
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+homeworld
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.89
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+48
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+species
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+37
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+
+**Variable type: list**
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+skim_variable
+</th>
+<th style="text-align:right;">
+n_missing
+</th>
+<th style="text-align:right;">
+complete_rate
+</th>
+<th style="text-align:right;">
+n_unique
+</th>
+<th style="text-align:right;">
+min_length
+</th>
+<th style="text-align:right;">
+max_length
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+films
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+24
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+vehicles
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+starships
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+</tbody>
+</table>
+
+**Variable type: numeric**
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+skim_variable
+</th>
+<th style="text-align:right;">
+n_missing
+</th>
+<th style="text-align:right;">
+complete_rate
+</th>
+<th style="text-align:right;">
+mean
+</th>
+<th style="text-align:right;">
+sd
+</th>
+<th style="text-align:right;">
+p0
+</th>
+<th style="text-align:right;">
+p25
+</th>
+<th style="text-align:right;">
+p50
+</th>
+<th style="text-align:right;">
+p75
+</th>
+<th style="text-align:right;">
+p100
+</th>
+<th style="text-align:left;">
+hist
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+height
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0.93
+</td>
+<td style="text-align:right;">
+174.36
+</td>
+<td style="text-align:right;">
+34.77
+</td>
+<td style="text-align:right;">
+66
+</td>
+<td style="text-align:right;">
+167.0
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+191.0
+</td>
+<td style="text-align:right;">
+264
+</td>
+<td style="text-align:left;">
+▁▁▇▅▁
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mass
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:right;">
+0.68
+</td>
+<td style="text-align:right;">
+97.31
+</td>
+<td style="text-align:right;">
+169.46
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+55.6
+</td>
+<td style="text-align:right;">
+79
+</td>
+<td style="text-align:right;">
+84.5
+</td>
+<td style="text-align:right;">
+1358
+</td>
+<td style="text-align:left;">
+▇▁▁▁▁
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+birth_year
+</td>
+<td style="text-align:right;">
+44
+</td>
+<td style="text-align:right;">
+0.49
+</td>
+<td style="text-align:right;">
+87.57
+</td>
+<td style="text-align:right;">
+154.69
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+35.0
+</td>
+<td style="text-align:right;">
+52
+</td>
+<td style="text-align:right;">
+72.0
+</td>
+<td style="text-align:right;">
+896
+</td>
+<td style="text-align:left;">
+▇▁▁▁▁
+</td>
+</tr>
+</tbody>
+</table>
+
+## Drop rows with missing values
+
+Drop rows that have `NA`values in a specific column, here in `height`.
+
+``` r
+starwars %>% 
+  drop_na(height)
+```
+
+    ## # A tibble: 81 × 14
+    ##    name    height  mass hair_color  skin_color eye_color birth_year sex   gender
+    ##    <chr>    <int> <dbl> <chr>       <chr>      <chr>          <dbl> <chr> <chr> 
+    ##  1 Luke S…    172    77 blond       fair       blue            19   male  mascu…
+    ##  2 C-3PO      167    75 <NA>        gold       yellow         112   none  mascu…
+    ##  3 R2-D2       96    32 <NA>        white, bl… red             33   none  mascu…
+    ##  4 Darth …    202   136 none        white      yellow          41.9 male  mascu…
+    ##  5 Leia O…    150    49 brown       light      brown           19   fema… femin…
+    ##  6 Owen L…    178   120 brown, grey light      blue            52   male  mascu…
+    ##  7 Beru W…    165    75 brown       light      blue            47   fema… femin…
+    ##  8 R5-D4       97    32 <NA>        white, red red             NA   none  mascu…
+    ##  9 Biggs …    183    84 black       light      brown           24   male  mascu…
+    ## 10 Obi-Wa…    182    77 auburn, wh… fair       blue-gray       57   male  mascu…
+    ## # … with 71 more rows, and 5 more variables: homeworld <chr>, species <chr>,
+    ## #   films <list>, vehicles <list>, starships <list>
+
+Drop all rows that contain `NA` in any column.
+
+``` r
+starwars %>% 
+  drop_na()
+```
+
+    ## # A tibble: 6 × 14
+    ##   name     height  mass hair_color  skin_color eye_color birth_year sex   gender
+    ##   <chr>     <int> <dbl> <chr>       <chr>      <chr>          <dbl> <chr> <chr> 
+    ## 1 Luke Sk…    172    77 blond       fair       blue            19   male  mascu…
+    ## 2 Obi-Wan…    182    77 auburn, wh… fair       blue-gray       57   male  mascu…
+    ## 3 Anakin …    188    84 blond       fair       blue            41.9 male  mascu…
+    ## 4 Chewbac…    228   112 brown       unknown    blue           200   male  mascu…
+    ## 5 Wedge A…    170    77 brown       fair       hazel           21   male  mascu…
+    ## 6 Darth M…    175    80 none        red        yellow          54   male  mascu…
+    ## # … with 5 more variables: homeworld <chr>, species <chr>, films <list>,
+    ## #   vehicles <list>, starships <list>
+
+Filter out any NA containing rows.
+
+``` r
+starwars %>% 
+ na.exclude()
+```
+
+    ## # A tibble: 29 × 14
+    ##    name    height  mass hair_color  skin_color eye_color birth_year sex   gender
+    ##    <chr>    <int> <dbl> <chr>       <chr>      <chr>          <dbl> <chr> <chr> 
+    ##  1 Luke S…    172    77 blond       fair       blue            19   male  mascu…
+    ##  2 Darth …    202   136 none        white      yellow          41.9 male  mascu…
+    ##  3 Leia O…    150    49 brown       light      brown           19   fema… femin…
+    ##  4 Owen L…    178   120 brown, grey light      blue            52   male  mascu…
+    ##  5 Beru W…    165    75 brown       light      blue            47   fema… femin…
+    ##  6 Biggs …    183    84 black       light      brown           24   male  mascu…
+    ##  7 Obi-Wa…    182    77 auburn, wh… fair       blue-gray       57   male  mascu…
+    ##  8 Anakin…    188    84 blond       fair       blue            41.9 male  mascu…
+    ##  9 Chewba…    228   112 brown       unknown    blue           200   male  mascu…
+    ## 10 Han So…    180    80 brown       fair       brown           29   male  mascu…
+    ## # … with 19 more rows, and 5 more variables: homeworld <chr>, species <chr>,
+    ## #   films <list>, vehicles <list>, starships <list>
+
+## Replace `NA`s
+
+Replace 0 with value you want as a replacement.
+
+``` r
+data(na_example)
+sum(is.na(na_example))
+```
+
+    ## [1] 145
+
+``` r
+no_nas <- ifelse(is.na(na_example), 0, na_example) # "if is NA is true, change value to 0, else keep the value (i.e. na_example)"
+
+sum(is.na(no_nas))
+```
+
+    ## [1] 0
+
+## The factor variable trap
+
+The FVT is about what happens when you try to return factorized vectors
+into numeric values. Let’s look at this with this code.
+
+``` r
+z <-factor(c("12", "13", "14", "15", "12")) # We create an object by directly factorizing a vector. 
+z
+```
+
+    ## [1] 12 13 14 15 12
+    ## Levels: 12 13 14 15
+
+``` r
+y <- as.numeric(z) # Now we want to convert them into numeric values. 
+y # What?
+```
+
+    ## [1] 1 2 3 4 1
+
+This happened, because we picked up the on the factorization result.
+`factor()` assigns every element, based on its value, an integer number.
+
+``` r
+typeof(z) # 1=12, 13=2, 14=3, 15=4, 12=1
+```
+
+    ## [1] "integer"
+
+To fix this problem, first convert the object back to character and then
+to numeric.
+
+``` r
+y <- as.numeric(as.character(z))
+y
+```
+
+    ## [1] 12 13 14 15 12

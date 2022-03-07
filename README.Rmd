@@ -21,7 +21,7 @@ Analysis is done with `tidyverse` and `ggplot2`.
 
 # 1. Gapminder Dataset
 
-## Exploration and Analysis
+## Exploration and analysis
 
 What was the life expectancy in Germany for the last 60 years?
 
@@ -225,7 +225,7 @@ gapminder %>%
 
 # 2. European Social Survey Dataset
 
-## Require Data
+## Require data
 
 ```{r cache=TRUE}
 library(essurvey)
@@ -240,7 +240,7 @@ show_countries()
 ess_9 <- import_rounds(9)
 ```
 
-## Exploration and Analysis
+## Exploration and analysis
 
 Skim to get an overview of the variables.
 
@@ -255,7 +255,7 @@ Glimpse to get a peak at the first values.
 head(ess_9)
 ```
 
-## Interesting Variables
+## Interesting variables
 
 -   [wltdffr: Differences in wealth in country, how fair](http://nesstar.ess.nsd.uib.no/webview/index.jsp?v=2&submode=variable&study=http%3A%2F%2F129.177.90.83%3A-1%2Fobj%2FfStudy%2FESS9e03.1&gs=undefined&variable=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfVariable%2FESS9e03.1_V518&mode=documentation&top=yes)
 
@@ -350,14 +350,15 @@ d %>%
 
 # 3. WDI Dataset
 
-## Require Data
+## Require data
 
 ```{r}
 library(WDI)
 ```
 
+Search for topics in datasets.
+
 ```{r cache=TRUE}
-# Search for topics in datasets
 head(WDIsearch("co2"), 10)
 
 WDIsearch('gdp.*capita.*constant')
@@ -372,16 +373,9 @@ dat = WDI(
   start = 1960, end = 2018)
 ```
 
-## Exploration and Analysis
+## Exploration and analysis
 
-```{r}
-# Population Developments
-summary(dat)
-n_distinct(dat$country)
-distinct(dat, country)
-```
-
-Random countries population.
+What was the population development like in these specific countries?
 
 ```{r}
 dat %>% 
@@ -393,19 +387,7 @@ dat %>%
   labs(title = "Random Countries Population", color = "Country")
 ```
 
-Bosnia's population development.
-
-```{r}
-dat %>% 
-  filter(country=="Bosnia and Herzegovina") %>% 
-  ggplot(aes(year,population)) + geom_bar(stat = "identity") + 
-  scale_x_continuous(breaks = seq(1960,2020,5)) + 
-  scale_y_continuous(labels = scales::comma) + 
-  labs(title = "Population of Bosnia and Hercegovina") + 
-  xlab("Year") + ylab("Population")
-```
-
-Balkan population development.
+What was the population development like in the former Yugoslav Republics?
 
 ```{r}
 dat %>% 
@@ -418,7 +400,7 @@ dat %>%
   xlab("Year") + ylab("Population")
 ```
 
-Balkan GDP development.
+What was the development of GDP in the former Yugoslav Republics?
 
 ```{r}
 dat %>% 
@@ -432,11 +414,313 @@ dat %>%
   xlab("Year") + ylab("GDP current US$")
 ```
 
-Income share by richest 10% in Germany and the United States.
+# Frequent Data Analysis Problems + Solutions
+
+## First exploration of new dataset
+
+The `skim()`shows how many missing and unique values each variable has. It uses appropriate measures to describe each variable based on its type: character, numeric or list.
 
 ```{r}
-dat %>% 
-  filter(country %in% c("Germany","United States")) %>% 
-  filter(between(year, 1990, 2020)) %>% 
-  ggplot(aes(year,inc_sha_10, color = country)) + geom_line()
+skimr::skim(starwars)
+```
+
+The glimpse function, on the other hand, gives us a good peak at the first raw values each variable has.
+
+```{r}
+glimpse(starwars)
+```
+
+## A Count and prop table
+
+**First way with `forcats::fct_count()`** Calculates a count and prop table.
+
+```{r}
+starwars$sex %>%
+ factor() %>% 
+  fct_count(sort = T, prop = T)
+```
+
+**Second way with `deplyr::count()`** Simply mutate a frequency and percentage column on a counted table.
+
+```{r}
+starwars %>% 
+ count(sex) %>% 
+  mutate(freq = n / sum(n)) %>% 
+  mutate(perc = freq * 100)
+```
+
+## Bar graph with count data
+
+Here is a situation where we calculated a count table for hair color - we summarized all values. If we then want to plot a bar graph based on that count table we run into problems, because ggplot2 is expecting a non-summarized or normal data frame.
+
+```{r}
+hair_color_table = starwars %>% 
+  mutate(hair_color = fct_lump_min(hair_color, 2)) %>% 
+  group_by(hair_color) %>% 
+  summarise(n = n())
+hair_color_table
+```
+
+To tell the function that we have already summarized data, we add the argument `stat = "identity"` to the `geom_bar()` function.
+
+```{r}
+hair_color_table %>% 
+  ggplot(aes(x = reorder(hair_color, n), y = n, fill = hair_color)) + 
+  geom_bar(stat = "identity") + 
+  theme(legend.position = "none")
+```
+
+## Bar graph with percentage labels
+
+First we create a table with counts and percentages:
+
+```{r}
+d = starwars %>% 
+  group_by(gender) %>% 
+  summarise(count = n()) %>% 
+  mutate(percentage = count/sum(count))
+d
+```
+
+Then we plot a graph with bar and with percentage labels.
+
+```{r}
+d %>% 
+  ggplot(aes(gender, percentage, label = round(percentage, 2), fill = gender)) + 
+  geom_bar(stat = "identity") + 
+  geom_label(aes(fill = NA), fill = "white") + 
+  theme(legend.position = "none")
+```
+
+## Collapse factors to „Other"
+
+This syntax mutates the categorical variable homeworld into eight of its most frequent values. The other values are being collapsed into the categorical value „other".
+
+```{r}
+starwars %>% 
+  mutate(homeworld = fct_lump_n(homeworld, n = 8)) %>% 
+  group_by(homeworld) %>% 
+  summarise(mean(height, na.rm =T), mean(mass, na.rm = T), n())
+```
+
+## Filter for specific values
+
+We can easily filter out cases with certain column values, like for example the states of Hawai and Alaska. We use `filter()`, the operator `!` and `%in%`.
+
+```{r}
+starwars %>% 
+  filter(!homeworld%in%c("Tatooine","Naboo")) %>% 
+  select(name, homeworld)
+```
+
+## Change bar colors in barplot
+
+You can manually pick the colors with `fill` and a vector containing the color values. Either in String, written out.
+
+```{r}
+starwars %>% 
+  mutate(sex = fct_infreq(sex)) %>% 
+  ggplot(aes(sex)) + 
+  geom_bar(fill = c("red","blue","green","black","grey")) 
+```
+
+Or with RGB Color Codes.
+
+```{r}
+starwars %>% 
+    mutate(sex = fct_infreq(sex)) %>%
+    ggplot(aes(sex)) +
+    geom_bar(fill = c("#003f5c","#58508d","#bc5090","#ff6361","#ffa600")) 
+```
+
+## Hide aes(color) mapping legend
+
+Here is an example where we want the bar colored based on the variable itself, but without the mapping legend.
+
+```{r}
+starwars %>% 
+  mutate(sex = fct_infreq(sex)) %>% 
+  ggplot(aes(sex, fill = sex)) + 
+  geom_bar()
+```
+
+Hide the geom_bar legend.
+
+```{r}
+starwars %>% 
+  mutate(sex = fct_infreq(sex)) %>% 
+  ggplot(aes(sex, fill = sex)) + 
+  geom_bar(show.legend = F)
+```
+
+Remove just the legend title:
+
+```{r}
+starwars %>% 
+  mutate(sex = fct_infreq(sex)) %>% 
+  ggplot(aes(sex, fill = sex)) + 
+  geom_bar() +
+  theme(legend.title = element_blank())
+```
+
+Hide all legends created:
+
+```{r}
+starwars %>% 
+  mutate(sex = fct_infreq(sex)) %>% 
+  ggplot(aes(sex, fill = sex)) + 
+  geom_bar() +
+  theme(legend.position = "none")
+```
+
+## Re-code values of categorical variables
+
+**First way** We can use `fct_collapse()`to create a new column with the new recoded values in it.
+
+```{r eval=FALSE, include=FALSE}
+ess_9 = ess_9 %>% 
+  mutate(new_wltdffr = fct_collapse(wltdffr, 
+             Too_Large = c("Large, extremely unfair", "Large, very unfair", "Large, somewhat unfair","Large, slightly unfair"), 
+             Fair = "Fair", 
+             Too_Small = c("Small, extremely unfair", "Small, very unfair", "Small, somewhat unfair","Small, slightly unfair"))) %>% 
+  mutate(new_wltdffr = factor(new_wltdffr, levels = c("Too_Large", "Fair", "Too_Small")))
+```
+
+**Second way** By using `mutate`, to create a new column with our own values and `case_when`, to run through our observations looking for defined cases, together with "variable" `%in%`, we can create our own groups.
+
+```{r}
+gapminder %>% 
+ mutate(group = case_when(
+    region %in% c("Western Europe", "Northern Europe","Southern Europe","Northern America", "Australia and New Zealand") ~ "West", # If region is one of values -> assign it "West" in new group column.
+    region %in% c("Eastern Asia", "South-Eastern Asia") ~ "East Asia",
+    region %in% c("Caribbean", "Central America", "South America") ~ "Latin America",
+    continent == "Africa" & 
+      region != "Northern Africa" ~ "Sub-Saharan",
+    TRUE ~ "Others")) %>%  # If nothing above applies -> assign it "Others" in group column
+  head(10)
+
+```
+
+We turn this `group` variable into a factor to control the order of the levels:
+
+```{r eval=FALSE, include=FALSE}
+gapminder %>% 
+  mutate(group = factor(group, levels = c("Others", "Latin America", "East Asia", "Sub-Saharan","West")))
+```
+
+## Order color legend
+
+Order color legend by a variable's values.
+
+```{r eval=FALSE, include=FALSE}
+data %>% 
+    ggplot(aes(year,population, color = reorder(country, desc(population)))) + # "Reorder countries by descending order of population"
+    geom_line() 
+```
+
+## Show unique values
+
+Display all unique values of variable.
+
+```{r}
+distinct(starwars, species) # dplyr function
+```
+
+**Note**: `distinct(dat$countries)` doesn't work.
+
+## Slice rows by maximum or minimum values
+
+**Note:** parameter `n` must be explicitly written, otherwise it throws an error.
+
+```{r}
+starwars %>% 
+  slice_max(height, n = 5)
+```
+
+Show me 5% of the lowest height rows.
+
+```{r}
+starwars %>% 
+  slice_min(height, prop = 0.05)
+```
+
+## Show Number of `NA`s
+
+For a quick check of how many missing values there are in a single column:
+
+```{r}
+sum(is.na(starwars$height))
+```
+
+And how many are not `NA`s.
+
+```{r}
+sum(!is.na(starwars$height))
+```
+
+For a more detailed overview of the whole dataset use `skim()`. It shows a very useful `complete_rate` which tells us how much of the column is disturbed by missing values.
+
+```{r}
+skimr::skim(starwars)
+```
+
+## Drop rows with missing values
+
+Drop rows that have `NA`values in a specific column, here in `height`.
+
+```{r}
+starwars %>% 
+  drop_na(height)
+```
+
+Drop all rows that contain `NA` in any column.
+
+```{r}
+starwars %>% 
+  drop_na()
+```
+
+Filter out any NA containing rows.
+
+```{r}
+starwars %>% 
+ na.exclude()
+```
+
+## Replace `NA`s
+
+Replace 0 with value you want as a replacement.
+
+```{r}
+data(na_example)
+sum(is.na(na_example))
+
+no_nas <- ifelse(is.na(na_example), 0, na_example) # "if is NA is true, change value to 0, else keep the value (i.e. na_example)"
+
+sum(is.na(no_nas))
+```
+
+## The factor variable trap
+
+The FVT is about what happens when you try to return factorized vectors into numeric values. Let's look at this with this code.
+
+```{r}
+z <-factor(c("12", "13", "14", "15", "12")) # We create an object by directly factorizing a vector. 
+z
+
+y <- as.numeric(z) # Now we want to convert them into numeric values. 
+y # What?
+```
+
+This happened, because we picked up the on the factorization result. `factor()` assigns every element, based on its value, an integer number.
+
+```{r}
+typeof(z) # 1=12, 13=2, 14=3, 15=4, 12=1
+```
+
+To fix this problem, first convert the object back to character and then to numeric.
+
+```{r}
+y <- as.numeric(as.character(z))
+y
 ```
