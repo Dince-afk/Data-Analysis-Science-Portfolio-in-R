@@ -19,9 +19,11 @@ knitr::opts_chunk$set(
 
 Analysis is done with `tidyverse` and `ggplot2`.
 
-# 1. Gapminder Dataset
+# 1. Example Data Analysis
 
-## Exploration and analysis
+## Gapminder Dataset
+
+### Exploration and analysis
 
 What was the life expectancy in Germany for the last 60 years?
 
@@ -30,6 +32,18 @@ gapminder %>%
   filter(country == "Germany") %>% 
   ggplot() + 
   geom_line(aes(year,life_expectancy)) +
+  scale_y_continuous(labels = scales::comma) + 
+  xlab("Year") + ylab("Life Expectancy") + 
+  ggtitle("Life Expectancy in Germany from 1960 to 2015")
+```
+
+What was the life expectancy in several different countries for the last 60 years?
+
+```{r}
+gapminder %>% 
+  filter(country %in% c("Germany","China", "Nigeria", "Canada", "Thailand", "Russia")) %>% 
+  ggplot() + 
+  geom_line(aes(year,life_expectancy, group = country, color = country)) +
   scale_y_continuous(labels = scales::comma) + 
   xlab("Year") + ylab("Life Expectancy") + 
   ggtitle("Life Expectancy in Germany from 1960 to 2015")
@@ -47,7 +61,7 @@ gapminder %>%
   
 ```
 
-What regions in gapminder are there actually?
+What regions in gapminder are there?
 
 ```{r}
 levels(gapminder$region)
@@ -223,9 +237,9 @@ gapminder %>%
   labs(title = "Life expectancy between continents in 1962 and 2012")
 ```
 
-# 2. European Social Survey Dataset
+## European Social Survey Dataset
 
-## Require data
+### Require data
 
 ```{r cache=TRUE}
 library(essurvey)
@@ -240,7 +254,7 @@ show_countries()
 ess_9 <- import_rounds(9)
 ```
 
-## Exploration and analysis
+### Exploration and analysis
 
 Skim to get an overview of the variables.
 
@@ -255,7 +269,7 @@ Glimpse to get a peak at the first values.
 head(ess_9)
 ```
 
-## Interesting variables
+### Interesting variables
 
 -   [wltdffr: Differences in wealth in country, how fair](http://nesstar.ess.nsd.uib.no/webview/index.jsp?v=2&submode=variable&study=http%3A%2F%2F129.177.90.83%3A-1%2Fobj%2FfStudy%2FESS9e03.1&gs=undefined&variable=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfVariable%2FESS9e03.1_V518&mode=documentation&top=yes)
 
@@ -348,9 +362,9 @@ d %>%
   ggtitle("Opinion on Differences in Wealth 2018")
 ```
 
-# 3. WDI Dataset
+## WDI Dataset
 
-## Require data
+### Require data
 
 ```{r}
 library(WDI)
@@ -363,7 +377,7 @@ head(WDIsearch("co2"), 10)
 
 WDIsearch('gdp.*capita.*constant')
 
-# Download
+# Download it
 dat = WDI(
   country = "all", 
   indicator = c(
@@ -373,7 +387,7 @@ dat = WDI(
   start = 1960, end = 2018)
 ```
 
-## Exploration and analysis
+### Exploration and analysis
 
 What was the population development like in these specific countries?
 
@@ -414,7 +428,7 @@ dat %>%
   xlab("Year") + ylab("GDP current US$")
 ```
 
-# Frequent Data Analysis Problems + Solutions
+# 2. Frequent Data Analysis Problems + Solutions
 
 ## First exploration of new dataset
 
