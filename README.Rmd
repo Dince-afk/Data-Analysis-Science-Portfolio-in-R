@@ -17,11 +17,15 @@ knitr::opts_chunk$set(
 )
 ```
 
-Analysis is done with `tidyverse` and `ggplot2`.
+This is a compiled showcase of data analysis work I have written in R over the years. I love doing with with `tidyverse` and `ggplot2`, and rely heavy on its environment.
 
-# 1. Gapminder Dataset
+Here are some example dataset analysises and my compilation of frequent data analysis problems plus their solutions.
 
-## Exploration and analysis
+# 1. Examples
+
+## Gapminder Dataset
+
+About Gapminder: "Gapminder identifies systematic misconceptions about important global trends and proportions and uses reliable data to develop easy to understand teaching materials to rid people of their misconceptions."
 
 What was the life expectancy in Germany for the last 60 years?
 
@@ -33,6 +37,18 @@ gapminder %>%
   scale_y_continuous(labels = scales::comma) + 
   xlab("Year") + ylab("Life Expectancy") + 
   ggtitle("Life Expectancy in Germany from 1960 to 2015")
+```
+
+What was the life expectancy in several different countries for the last 60 years?
+
+```{r}
+gapminder %>% 
+  filter(country %in% c("Germany","China", "Nigeria", "Canada", "Thailand", "Russia")) %>% 
+  ggplot() + 
+  geom_line(aes(year,life_expectancy, group = country, color = country)) +
+  scale_y_continuous(labels = scales::comma) + 
+  xlab("Year") + ylab("Life Expectancy") + 
+  ggtitle("Life Expectancy in Several Different Countries from 1960 to 2015")
 ```
 
 What are the differences in infant mortality rates by continent?
@@ -47,7 +63,7 @@ gapminder %>%
   
 ```
 
-What regions in gapminder are there actually?
+What regions in gapminder are there?
 
 ```{r}
 levels(gapminder$region)
@@ -223,9 +239,7 @@ gapminder %>%
   labs(title = "Life expectancy between continents in 1962 and 2012")
 ```
 
-# 2. European Social Survey Dataset
-
-## Require data
+## European Social Survey Dataset
 
 ```{r cache=TRUE}
 library(essurvey)
@@ -240,22 +254,13 @@ show_countries()
 ess_9 <- import_rounds(9)
 ```
 
-## Exploration and analysis
-
-Skim to get an overview of the variables.
-
-```{r}
-# skimr::skim(ess_9)
-```
-
 Glimpse to get a peak at the first values.
 
 ```{r}
-# glimpse(ess_9)
 head(ess_9)
 ```
 
-## Interesting variables
+**Interesting variables**
 
 -   [wltdffr: Differences in wealth in country, how fair](http://nesstar.ess.nsd.uib.no/webview/index.jsp?v=2&submode=variable&study=http%3A%2F%2F129.177.90.83%3A-1%2Fobj%2FfStudy%2FESS9e03.1&gs=undefined&variable=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfVariable%2FESS9e03.1_V518&mode=documentation&top=yes)
 
@@ -348,9 +353,7 @@ d %>%
   ggtitle("Opinion on Differences in Wealth 2018")
 ```
 
-# 3. WDI Dataset
-
-## Require data
+## WDI Dataset
 
 ```{r}
 library(WDI)
@@ -363,7 +366,7 @@ head(WDIsearch("co2"), 10)
 
 WDIsearch('gdp.*capita.*constant')
 
-# Download
+# Download it
 dat = WDI(
   country = "all", 
   indicator = c(
@@ -372,8 +375,6 @@ dat = WDI(
   inc_sha_10 = "SI.DST.10TH.10"),
   start = 1960, end = 2018)
 ```
-
-## Exploration and analysis
 
 What was the population development like in these specific countries?
 
@@ -414,7 +415,7 @@ dat %>%
   xlab("Year") + ylab("GDP current US$")
 ```
 
-# Frequent Data Analysis Problems + Solutions
+# 2. Frequent Data Analysis Problems + Solutions
 
 ## First exploration of new dataset
 

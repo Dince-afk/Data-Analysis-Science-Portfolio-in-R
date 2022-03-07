@@ -1,11 +1,21 @@
 Portfolio: Data Analysis in R
 ================
 
-Analysis is done with `tidyverse` and `ggplot2`.
+This is a compiled showcase of data analysis work I have written in R
+over the years. I love doing with with `tidyverse` and `ggplot2`, and
+rely heavy on its environment.
 
-# 1. Gapminder Dataset
+Here are some example dataset analysises and my compilation of frequent
+data analysis problems plus their solutions.
 
-## Exploration and analysis
+# 1. Examples
+
+## Gapminder Dataset
+
+About Gapminder: “Gapminder identifies systematic misconceptions about
+important global trends and proportions and uses reliable data to
+develop easy to understand teaching materials to rid people of their
+misconceptions.”
 
 What was the life expectancy in Germany for the last 60 years?
 
@@ -21,6 +31,21 @@ gapminder %>%
 
 ![](README_figs/README-unnamed-chunk-3-1.png)<!-- -->
 
+What was the life expectancy in several different countries for the last
+60 years?
+
+``` r
+gapminder %>% 
+  filter(country %in% c("Germany","China", "Nigeria", "Canada", "Thailand", "Russia")) %>% 
+  ggplot() + 
+  geom_line(aes(year,life_expectancy, group = country, color = country)) +
+  scale_y_continuous(labels = scales::comma) + 
+  xlab("Year") + ylab("Life Expectancy") + 
+  ggtitle("Life Expectancy in Several Different Countries from 1960 to 2015")
+```
+
+![](README_figs/README-unnamed-chunk-4-1.png)<!-- -->
+
 What are the differences in infant mortality rates by continent?
 
 ``` r
@@ -34,9 +59,9 @@ gapminder %>%
 
     ## Warning: Removed 7 rows containing non-finite values (stat_boxplot).
 
-![](README_figs/README-unnamed-chunk-4-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-5-1.png)<!-- -->
 
-What regions in gapminder are there actually?
+What regions in gapminder are there?
 
 ``` r
 levels(gapminder$region)
@@ -67,7 +92,7 @@ gapminder %>%
   ylab("Country")
 ```
 
-![](README_figs/README-unnamed-chunk-6-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-7-1.png)<!-- -->
 
 Pie chart of Europe’s population
 
@@ -83,7 +108,7 @@ gapminder %>%
   ylab("Country")
 ```
 
-![](README_figs/README-unnamed-chunk-7-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-8-1.png)<!-- -->
 
 What are the countries with the biggest life expectancy in Europe?
 
@@ -118,7 +143,7 @@ gapminder %>%
   labs(title = "Life Expectancy in European Countries (2016)", caption = "Gapminder data.")
 ```
 
-![](README_figs/README-unnamed-chunk-9-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-10-1.png)<!-- -->
 
 The GDP of middle-eastern countries.
 
@@ -135,7 +160,7 @@ gapminder %>%
 
     ## Warning: Removed 1 rows containing missing values (position_stack).
 
-![](README_figs/README-unnamed-chunk-10-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-11-1.png)<!-- -->
 
 What was the correlation between fertility and life expectancy in 1962?
 
@@ -150,7 +175,7 @@ gapminder %>%
   theme_clean()
 ```
 
-![](README_figs/README-unnamed-chunk-11-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-12-1.png)<!-- -->
 
 What was the correlation between fertility and life expectancy by
 continents in 1962?
@@ -165,7 +190,7 @@ gapminder %>%
   ylab("Life Expectancy")
 ```
 
-![](README_figs/README-unnamed-chunk-12-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-13-1.png)<!-- -->
 
 How was it in 2012 compared to 1962?
 
@@ -180,7 +205,7 @@ gapminder %>%
   ylab("Life Expectancy")
 ```
 
-![](README_figs/README-unnamed-chunk-13-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-14-1.png)<!-- -->
 
 Show me its development in detail over time
 
@@ -195,7 +220,7 @@ gapminder %>%
   ylab("Life Expectancy")
 ```
 
-![](README_figs/README-unnamed-chunk-14-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-15-1.png)<!-- -->
 
 What is the fertility distribution in Europe like?
 
@@ -209,7 +234,7 @@ gapminder %>%
   xlab("Fertility Rates")
 ```
 
-![](README_figs/README-unnamed-chunk-15-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-16-1.png)<!-- -->
 
 What is the fertility distribution in Asia like?
 
@@ -223,7 +248,7 @@ gapminder %>%
   xlab("Fertility Rates")
 ```
 
-![](README_figs/README-unnamed-chunk-16-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-17-1.png)<!-- -->
 
 What is the fertility distribution like by continents?
 
@@ -240,7 +265,7 @@ gapminder %>%
 
     ## Warning: Removed 1 rows containing non-finite values (stat_density_ridges).
 
-![](README_figs/README-unnamed-chunk-17-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-18-1.png)<!-- -->
 
 Density rigdes on other variable distributions
 
@@ -256,7 +281,7 @@ gapminder %>%
 
     ## Picking joint bandwidth of 2.23
 
-![](README_figs/README-unnamed-chunk-18-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-19-1.png)<!-- -->
 
 How has the life expectancy in countries by continents changed between
 the years 1962 and 2012?
@@ -271,11 +296,9 @@ gapminder %>%
   labs(title = "Life expectancy between continents in 1962 and 2012")
 ```
 
-![](README_figs/README-unnamed-chunk-19-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-20-1.png)<!-- -->
 
-# 2. European Social Survey Dataset
-
-## Require data
+## European Social Survey Dataset
 
 ``` r
 library(essurvey)
@@ -313,18 +336,9 @@ ess_9 <- import_rounds(9)
     ## Warning: Round 9  was read with the `foreign` package rather than with  the `haven` package for compatibility reasons.
     ##  Please report any issues at https://github.com/ropensci/essurvey/issues
 
-## Exploration and analysis
-
-Skim to get an overview of the variables.
-
-``` r
-# skimr::skim(ess_9)
-```
-
 Glimpse to get a peak at the first values.
 
 ``` r
-# glimpse(ess_9)
 head(ess_9)
 ```
 
@@ -345,7 +359,7 @@ head(ess_9)
     ## #   prtvede1 <fct>, prtvede2 <fct>, prtvtddk <fct>, prtvtgee <fct>,
     ## #   prtvtees <fct>, prtvtdfi <fct>, prtvtdfr <fct>, prtvtcgb <fct>, …
 
-## Interesting variables
+**Interesting variables**
 
 -   [wltdffr: Differences in wealth in country, how
     fair](http://nesstar.ess.nsd.uib.no/webview/index.jsp?v=2&submode=variable&study=http%3A%2F%2F129.177.90.83%3A-1%2Fobj%2FfStudy%2FESS9e03.1&gs=undefined&variable=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfVariable%2FESS9e03.1_V518&mode=documentation&top=yes)
@@ -484,9 +498,7 @@ d %>%
 
 ![](README_figs/README-unnamed-chunk-29-1.png)<!-- -->
 
-# 3. WDI Dataset
-
-## Require data
+## WDI Dataset
 
 ``` r
 library(WDI)
@@ -539,7 +551,7 @@ WDIsearch('gdp.*capita.*constant')
     ## [5,] "GDP per capita, PPP (constant 1987 international $)"
 
 ``` r
-# Download
+# Download it
 dat = WDI(
   country = "all", 
   indicator = c(
@@ -548,8 +560,6 @@ dat = WDI(
   inc_sha_10 = "SI.DST.10TH.10"),
   start = 1960, end = 2018)
 ```
-
-## Exploration and analysis
 
 What was the population development like in these specific countries?
 
@@ -599,7 +609,7 @@ dat %>%
 
 ![](README_figs/README-unnamed-chunk-34-1.png)<!-- -->
 
-# Frequent Data Analysis Problems + Solutions
+# 2. Frequent Data Analysis Problems + Solutions
 
 ## First exploration of new dataset
 
