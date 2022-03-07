@@ -5,8 +5,8 @@ This is a compiled showcase of data analysis work I have written in R
 over the years. I love doing with with `tidyverse` and `ggplot2`, and
 rely heavy on its environment.
 
-Here are some example dataset analysises and my compilation of frequent
-data analysis problems plus their solutions.
+Here are some example analyses and my compilation of frequent data
+analysis problems plus their solutions.
 
 # 1. Example Data Analysis
 
@@ -45,16 +45,6 @@ gapminder %>%
 ```
 
 ![](README_figs/README-unnamed-chunk-4-1.png)<!-- -->
-
-``` r
-  ggtitle("Life Expectancy in Germany from 1960 to 2015")
-```
-
-    ## $title
-    ## [1] "Life Expectancy in Germany from 1960 to 2015"
-    ## 
-    ## attr(,"class")
-    ## [1] "labels"
 
 What are the differences in infant mortality rates by continent?
 
@@ -2312,3 +2302,290 @@ y
 ```
 
     ## [1] 12 13 14 15 12
+
+# Data Science / Statistics
+
+## Central Limit Theorem (Proof)
+
+Let’s create a sampling model and calculate a random statistic for the
+proportion p.
+
+``` r
+n = 100
+p = 0.4
+
+x = sample(c(1,0), size = n, replace = T, prob = c(p, (1-p)))
+x_bar= mean(x)
+x_bar
+```
+
+    ## [1] 0.38
+
+Now let’s create a Monte Carlo simulation in which we calculate the
+sample statistic p 10,000 times.
+
+``` r
+B = 10000
+x_bar_distribution = replicate(B, {
+  x = sample(c(1,0), size = n, replace = T, prob = c(p, (1-p)))
+  mean(x)
+})
+head(x_bar_distribution)
+```
+
+    ## [1] 0.38 0.36 0.38 0.38 0.35 0.49
+
+The Central Limit Theorem tells us that when the number of draws, also
+called the *sample size*, is large, the probability distribution of the
+sum (or mean/proportion) of the independent draws is approximately
+normal. Let’s test that by plotting a histogram and checking with
+`qqnorm()`.
+
+``` r
+hist(x_bar_distribution) #  Looks good
+```
+
+![](README_figs/README-unnamed-chunk-71-1.png)<!-- -->
+
+``` r
+qqnorm(x_bar_distribution);qqline(x_bar_distribution) # Looks good enoguh.
+```
+
+![](README_figs/README-unnamed-chunk-71-2.png)<!-- -->
+
+What’s the practical use of this proof? Because of it we can now use the
+normal distribution function to calculate probabilities. What is the
+probability that we get a proportion that is smaller than ? We first
+need the calculate the standard error of our sample.
+
+``` r
+SE = sqrt(p * (1-p) / n)
+3 * SE
+```
+
+    ## [1] 0.1469694
+
+The sampling distribution of the sample proportion is approximately
+normal and normal distributions encompass almost all possible values
+within 3 standard deviations from the mean. We can therefore say that
+99.7 % of all samples proportion statistics for n = 100 and p = 0.4 fall
+within +- 0.147 of 0.4. Here is the proof. We can compare the results
+from Monte Carlo simulation sampling distribution with standard normal
+distribution function. I.e. what’s the proportions/probability of
+falling outside of 3 standard deviations from the mean?
+
+``` r
+mean(x_bar_distribution < p - 3 * SE) + mean(x_bar_distribution > p + 3 * SE)
+```
+
+    ## [1] 0.0026
+
+``` r
+pnorm(-3) + 1 - pnorm(3)
+```
+
+    ## [1] 0.002699796
+
+This does in fact check out! The proportions from the Monte Carlo
+simulation and the probabilities from the normal distribution function
+do approximate each other very well. The applications based on these
+insights alone are somewhat limited.
+
+In real life we rarely have the probabilities for the population
+parameters. The power does show itself however when making inferences
+from one single sample, its proportion statistic and its standard
+deviation, about the population parameter. This is because we now know
+(experimentally proven) that the sampling distribution of the sample
+proportion is normally distributed.
+
+## Confidence Intervals (Proof)
+
+#### CI for Population Proportion
+
+Let’s say we want to estimate the population proportion (the mean of a
+categorical variable) e.g., the proportion of votes a Democratic
+candidate gets in an election. In our example, the true population
+proportion p = 0.45. In real life we actually don’t know this parameter.
+
+In R we can create a Monte Carlo Simulation (creating confidence
+intervals 10,000 times) in order to prove the validity of confidence
+intervals in general.
+
+``` r
+p = 0.45
+n = 1000
+B = 10000
+
+set.seed(1)
+correct_list = replicate(B, {
+  x = sample(c(1,0), size = n, replace = T, prob = c(p, (1-p)))
+  x_hat = mean(x)
+  se_hat = sqrt(x_hat * (1 - x_hat) / n)
+  between(p, x_hat - 1.96 * se_hat, x_hat + 1.96 * se_hat)
+})
+```
+
+And how often did we get a confidence interval that did in fact include
+the real population parameter p? The confidence interval did include the
+true parameter 0.9482 of the time. Pretty close to the theoretical goal
+of 0.95!
+
+``` r
+mean(correct_list)
+```
+
+    ## [1] 0.9482
+
+Let’s visualize the validity of CIs with another 100 samples and
+ggplot2.
+
+``` r
+# Used to create the graph
+lower_bounds = c()
+upper_bounds = c()
+x_hats = c()
+true = c()
+
+# Small Monte Carlo simulation
+for (i in 1:100) {
+  x = sample(c(1,0), size = n, replace = T, prob = c(p, (1-p)))
+  x_hat = mean(x)
+  x_hats = c(x_hats, x_hat)
+  se_hat = sqrt(x_hat * (1 - x_hat) / n)
+  lower_bounds = c(lower_bounds, (x_hat - 1.96 * se_hat))
+  upper_bounds = c(upper_bounds, (x_hat + 1.96 * se_hat))
+  true = c(true, between(p, x_hat - 1.96 * se_hat, x_hat + 1.96 * se_hat))
+}
+
+# ggplot2 only accepts tables
+table = tibble(x_hats, lower_bounds, upper_bounds, true)
+
+# Graph highlighting the validity of a 95% CI
+ggplot(table, aes(seq_along(x_hats), x_hats)) + 
+  geom_pointrange(aes(ymin = lower_bounds, ymax = upper_bounds, color = true)) +
+  geom_hline(yintercept = 0.45)
+```
+
+![](README_figs/README-unnamed-chunk-76-1.png)<!-- -->
+
+The proof from our 10,000 confidence intervals above that did in fact
+capture the true population proportion *p* (0.45) in approximately 95%
+of the time (0.943) tells us that we can create confidence intervals
+from a single sample “with confidence”. In other words, we can in fact
+be sure that a 95% confidence interval constructed from our sample *x̂*
+does include *p* in 95% of the time.
+
+Here is a single sample from which we will create a 95% confidence
+interval to showcase a more real-life example.
+
+``` r
+# In real life this model is shrouded in unknowns
+x = sample(c(1,0), size = 1000, replace = T, prob = c(p, (1-p)))
+
+# Sample mean
+x_hat = mean(x)
+
+# Standard Error
+se_hat = sqrt(x_hat * (1 - x_hat) / n)
+
+# Creating the bounds of the CI
+lower_bounds = x_hat - 1.96 * se_hat
+upper_bounds =x_hat + 1.96 * se_hat
+
+# The confidence interval is:
+lower_bounds
+```
+
+    ## [1] 0.4181713
+
+``` r
+upper_bounds
+```
+
+    ## [1] 0.4798287
+
+The confidence interval did in fact capture the true population
+parameter, which is actually unknown. So the actual result would be
+expressed as follows:
+
+> We are 95% confident that the true population proportion is between
+> 0.404 and 0.465.
+
+#### CI for Population Mean
+
+Lets say we a population of monthly incomes that is totally random and
+non-normally distributed.
+
+``` r
+set.seed(1)
+
+# Create 10000 random "incomes"
+incomes = runif(10000, min = 800, max = 6000)
+
+# Peek at it
+head(incomes, 10)
+```
+
+    ##  [1] 2180.645 2735.044 3778.837 5522.681 1848.746 5471.626 5712.311 4236.149
+    ##  [9] 4071.393 1121.289
+
+``` r
+# Create true population mean (unknown in real life)
+mu = mean(incomes)
+mu
+```
+
+    ## [1] 3400.873
+
+``` r
+# Plot reveals its very much unnormal
+plot(density(incomes))
+```
+
+![](README_figs/README-unnamed-chunk-78-1.png)<!-- -->
+
+Now comes the confidence interval. The parent population is very much
+non-normal, but because of the CTL and random sampling we can assume an
+approximately normal distribution of the sampling distribution of the
+sample means. Further, we do not replace picks when sampling (just like
+in real life), but can still assume independence because the sample size
+of 100 is only 1% from the total population of 10,000.
+
+``` r
+# Sample
+x = sample(incomes, 100)
+
+# Sample mean
+x_hat = mean(x)
+
+# Sample standard error
+se_hat = sd(x) / sqrt(100)
+
+# Create the margin of error
+lower_bound = x_hat - 1.96 * se_hat
+upper_bound = x_hat + 1.96 * se_hat
+ci = c(lower_bound, upper_bound)
+
+# Here is our confidence interval
+ci
+```
+
+    ## [1] 3260.147 3864.235
+
+``` r
+# Here is the real population mean (unknown in real life)
+mu
+```
+
+    ## [1] 3400.873
+
+Result: The 95% confidence interval for the true population mean *μ* is
+3212.27 to 3816.358 (sample mean is 3514.314).
+
+``` r
+t.test(x, conf.level = 0.95)$conf.int
+```
+
+    ## [1] 3256.415 3867.967
+    ## attr(,"conf.level")
+    ## [1] 0.95
