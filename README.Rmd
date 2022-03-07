@@ -21,28 +21,32 @@ knitr::opts_chunk$set(
 
 ## Analysis
 
-Bosnia Line Graph Life Expectancy
+What was the life expectancy in Germany for the last 60 years?
 
 ```{r}
 gapminder %>% 
-  filter(country == "Bosnia and Herzegovina") %>% 
+  filter(country == "Germany") %>% 
   ggplot() + 
   geom_line(aes(year,life_expectancy)) +
   scale_y_continuous(labels = scales::comma) + 
   xlab("Year") + ylab("Life Expectancy") + 
-  ggtitle("Line Graph of Bosnia Life Expectancy") + 
+  ggtitle("Line Graph of Life Expectancy in Germany") + 
   theme_calc()
 ```
 
-Infant mortality rate by continents
+What are the differences in infant mortality rates by continent?
 
 ```{r}
 gapminder %>% 
   filter(year == 2014) %>% 
-  ggplot() + geom_boxplot(aes(continent, infant_mortality, color = continent), show.legend = F)
+  ggplot() + geom_boxplot(aes(continent, infant_mortality, color = continent), show.legend = F) + 
+  ggtitle("Infant Mortality Rates by Continents") + 
+  xlab("Continents") + 
+  ylab("Infant Mortality Rates")
+  
 ```
 
-What regions are there actually?
+What regions in gapminder are there actually?
 
 ```{r}
 levels(gapminder$region)
@@ -75,7 +79,7 @@ gapminder %>%
   ylab("Country")
 ```
 
-Biggest Life Expectancy Countries in Europe?
+What are the countries with the biggest life expectancy in Europe?
 
 ```{r}
 gapminder %>% 
@@ -95,32 +99,42 @@ gapminder %>%
   labs(title = "Life Expectancy in European Countries (2016)", caption = "Gapminder data.")
 ```
 
-Israel and its neighbors GDP.
+The GDP of middle-eastern countries.
 
 ```{r}
 gapminder %>% 
   filter(country %in% c("Israel", "Lebanon", "Egypt", "Saudi Arabia", "Bahrain", "West Bank and Gaza", "Yemen", "United Arab Emirate", "Iran", "Syria")) %>% 
   filter(year == 2009) %>% 
   ggplot(aes(gdp,country)) + 
-  geom_bar(stat = "identity")
+  geom_bar(stat = "identity") + 
+  ggtitle("Bar Graph of GDP in Middle-Eastern Countries") + 
+  xlab("GDP") + 
+  ylab("Country")
 ```
 
-How was fertility and life expectancy in 1962?
+What was the correlation between fertility and life expectancy in 1962?
 
 ```{r}
 gapminder %>% 
   filter(year == 1962) %>% 
   ggplot(aes(fertility, life_expectancy)) + 
-  geom_point()
+  geom_point() + 
+  ggtitle("Fertility and Life Expectancy in 1962") + 
+  xlab("Fertility") + 
+  ylab("Life Expectancy") + 
+  theme_clean()
 ```
 
-How was fertility and life expectancy in 1962 and what are the continents?
+What was the correlation between fertility and life expectancy by continents in 1962?
 
 ```{r}
 gapminder %>% 
   filter(year == 1962) %>% 
   ggplot(aes(fertility, life_expectancy, color = continent)) + 
-  geom_point()
+  geom_point() + 
+  ggtitle("Fertility and Life Expectancy in 1962") + 
+  xlab("Fertility") + 
+  ylab("Life Expectancy")
 ```
 
 How was it in 2012 compared to 1962?
@@ -130,84 +144,73 @@ gapminder %>%
   filter(year %in% c(1962,2012)) %>% 
   ggplot(aes(fertility, life_expectancy, color = continent)) + 
   geom_point() + 
-  facet_grid(.~year)
+  facet_grid(.~year) + 
+  ggtitle("Fertility and Life Expectancy in 1962 and 2012") + 
+  xlab("Fertility") + 
+  ylab("Life Expectancy")
 ```
 
-Show me the development in detail over time
+Show me its development in detail over time
 
 ```{r}
 gapminder %>% 
   filter(year %in% c(1962,1972,1982,1992,2002,2012)) %>% 
   ggplot(aes(fertility, life_expectancy, color = continent)) + 
   geom_point() + 
-  facet_wrap(.~year)
+  facet_wrap(.~year) + 
+  ggtitle("Fertility and Life Expectancy from 1962 to 2012") + 
+  xlab("Fertility") + 
+  ylab("Life Expectancy")
 ```
 
-Fertility distribution in Europe
+What is the fertility distribution in Europe like?
 
 ```{r}
 gapminder %>% 
   filter(continent == "Europe" & year == 2015) %>% 
   ggplot(aes(fertility, fill = region)) + 
-  geom_histogram(bins = 20)
+  geom_boxplot() + 
+  coord_flip() +
+  ggtitle("Fertility Rates in Europe by Regions in 2015") + 
+  xlab("Fertility Rates")
 ```
 
-Fertility distribution in Africa by region.
+What is the fertility distribution in Asia like?
 
 ```{r}
 gapminder %>% 
-  filter(continent == "Africa" & year == 2015) %>% 
+  filter(continent == "Asia" & year == 2015) %>% 
   ggplot(aes(fertility, fill = region)) + 
-  geom_histogram(bins = 20)
+  geom_boxplot() + 
+  coord_flip() +
+  ggtitle("Fertility Rates in Asia by Regions in 2015") + 
+  xlab("Fertility Rates")
 ```
 
-Fertility distribution compared in Africa and Europe with ggridges
+What is the fertility distribution like by continents?
 
 ```{r}
 gapminder %>% 
   filter(year == 2015) %>%  
-  ggplot(aes(fertility,continent, fill = continent)) + ggridges::geom_density_ridges(show.legend = F) 
+  ggplot(aes(fertility,continent, fill = continent)) + ggridges::geom_density_ridges(show.legend = F) + 
+  ggtitle("Fertility Rates by Continents in 2015") + 
+  xlab("Fertility Rates") + 
+  ylab("Continents")
 ```
 
 Density rigdes on other variable distributions
 
 ```{r}
 gapminder %>% 
-  filter(year == 2015) %>% # 2015: because latest year with most available data
+  filter(year == 2015) %>% 
   ggplot(aes(life_expectancy,continent, fill = continent)) + 
-  ggridges::geom_density_ridges(show.legend = F)
+  ggridges::geom_density_ridges(show.legend = F) + 
+  ggtitle("Life Expectancy by Continents in 2015") + 
+  xlab("Life Expectancy") + 
+  ylab("Continents")
 ```
 
-Child mortality distribution continents
-
-```{r}
-gapminder %>% 
-  filter(year == 2015) %>%  
-  ggplot(aes(infant_mortality,continent, fill = continent)) + ggridges::geom_density_ridges(show.legend = F) 
-```
-
-Population distribution continents
-
-```{r}
-gapminder %>% 
-  filter(year == 2015) %>%  
-  ggplot(aes(population,continent, fill = continent)) + 
-  ggridges::geom_density_ridges(show.legend = F) +
-  scale_x_log10()
-# -> Hmmmm, not really useful, I think
-```
-
-GPD densitiy ridges across continents.
-
-```{r}
-gapminder %>% 
-  filter(year == 2010) %>%  
-  ggplot(aes(gdp,continent, fill = continent)) + 
-  ggridges::geom_density_ridges(show.legend = F) +
-  scale_x_log10()
-```
-
-Boxplots, group difference, two points in time. Life expectancy between continents 1962 and 2012.
+How has the life expectancy in countries by continents changed between the years 1962 and 2012?
 
 ```{r}
 gapminder %>% 
