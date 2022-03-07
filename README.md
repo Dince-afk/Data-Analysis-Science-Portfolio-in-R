@@ -14,8 +14,7 @@ gapminder %>%
   geom_line(aes(year,life_expectancy)) +
   scale_y_continuous(labels = scales::comma) + 
   xlab("Year") + ylab("Life Expectancy") + 
-  ggtitle("Line Graph of Life Expectancy in Germany") + 
-  theme_calc()
+  ggtitle("Line Graph of Life Expectancy in Germany")
 ```
 
 ![](README_figs/README-unnamed-chunk-3-1.png)<!-- -->
