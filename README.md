@@ -1,9 +1,11 @@
-Portfolio: R and Data Analysis
+Portfolio: Data Analysis in R
 ================
 
-# Gapminder
+Analysis is done with `tidyverse` and `ggplot2`.
 
-## Analysis
+# 1. Gapminder Dataset
+
+## Exploration and Analysis
 
 What was the life expectancy in Germany for the last 60 years?
 
@@ -14,7 +16,7 @@ gapminder %>%
   geom_line(aes(year,life_expectancy)) +
   scale_y_continuous(labels = scales::comma) + 
   xlab("Year") + ylab("Life Expectancy") + 
-  ggtitle("Line Graph of Life Expectancy in Germany")
+  ggtitle("Life Expectancy in Germany from 1960 to 2015")
 ```
 
 ![](README_figs/README-unnamed-chunk-3-1.png)<!-- -->
@@ -60,7 +62,7 @@ gapminder %>%
   ggplot(aes(y=reorder(country, population),x = population)) + 
   geom_bar(stat = "identity") + 
   scale_x_continuous(labels = scales::comma) + 
-  ggtitle("Bar Graph of European Countries") + 
+  ggtitle("Population of European Countries") + 
   xlab("Population") + 
   ylab("Country")
 ```
@@ -76,7 +78,7 @@ gapminder %>%
   geom_bar(stat = "identity") + 
   scale_x_continuous(labels = scales::comma) + 
   coord_polar("y", start=0) +
-  ggtitle("Bar Graph of European Countries") + 
+  ggtitle("Population of European Countries") + 
   xlab("Population") + 
   ylab("Country")
 ```
@@ -271,9 +273,9 @@ gapminder %>%
 
 ![](README_figs/README-unnamed-chunk-19-1.png)<!-- -->
 
-# European Social Survey
+# 2. European Social Survey Dataset
 
-## Data
+## Require Data
 
 ``` r
 library(essurvey)
@@ -311,42 +313,7 @@ ess_9 <- import_rounds(9)
     ## Warning: Round 9  was read with the `foreign` package rather than with  the `haven` package for compatibility reasons.
     ##  Please report any issues at https://github.com/ropensci/essurvey/issues
 
-## Preparation?
-
-``` r
-# glimpse(ess_9)
-# summary(ess_9)
-att_data = attributes(ess_9)
-# sk = skim(ess_9)
-# 
-# DataExplorer::create_report(ess_9)
-# 
-# helpful_list = list(att_data$var.labels,)
-# 
-#   attributes(ess_9)["var.labels","val.labels"]
-# val_labels = attributes(ess_9)["label.table"]
-# str(ess_9)
-# ess_9$nwspol
-# 
-# ess_9 %>%
-#   group_by(cntry) %>%
-#   summarise(mean_h = mean(nwspol, na.rm = T)) %>%
-#   ggplot() + aes(mean_h, reorder(cntry, mean_h)) + geom_bar(stat = "identity")
-# 
-# attr(ess_9)
-# 
-# # sjlabelled package
-# rm(all_labels_1)
-# all_labels_1 = get_labels(ess_9, attr.only = T)
-# names(all_labels_1) = all_var_labels
-# 
-# # labelled package way
-# var_list = val_labels(ess_9)
-# all_var_labels = unlist(var_label(ess_9))
-# names(all_labels_2) = all_var_labels
-```
-
-## Exploration
+## Exploration and Analysis
 
 Skim to get an overview of the variables.
 
@@ -378,13 +345,7 @@ head(ess_9)
     ## #   prtvede1 <fct>, prtvede2 <fct>, prtvtddk <fct>, prtvtgee <fct>,
     ## #   prtvtees <fct>, prtvtdfi <fct>, prtvtdfr <fct>, prtvtcgb <fct>, …
 
-Show the variable labels stored in attributes.
-
-``` r
-# attributes(ess_9)["var.labels"]
-```
-
-## Variables
+## Interesting Variables
 
 -   [wltdffr: Differences in wealth in country, how
     fair](http://nesstar.ess.nsd.uib.no/webview/index.jsp?v=2&submode=variable&study=http%3A%2F%2F129.177.90.83%3A-1%2Fobj%2FfStudy%2FESS9e03.1&gs=undefined&variable=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfVariable%2FESS9e03.1_V518&mode=documentation&top=yes)
@@ -414,26 +375,12 @@ ess_9 %>%
   ggplot() + 
   aes(n, reorder(cntry, n), label = n) + 
   geom_bar(stat = "identity", fill = "steelblue") +
-  geom_label() + 
   ggtitle("Subjects per Country")
 ```
 
-![](README_figs/README-unnamed-chunk-25-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-23-1.png)<!-- -->
 
-How much time do subjects spent watching the news per country?
-
-``` r
-ess_9 %>% 
-  group_by(cntry) %>% 
-  summarise(mean_h = mean(nwspol, na.rm = T)) %>% 
-  ggplot() + 
-  aes(mean_h, reorder(cntry, mean_h)) + 
-  geom_bar(stat = "identity")
-```
-
-![](README_figs/README-unnamed-chunk-26-1.png)<!-- -->
-
-A bar graph displaying opinions on differences in wealth.
+What are the opinions on differences in wealth?
 
 ``` r
 ess_9 %>% 
@@ -445,7 +392,7 @@ ess_9 %>%
   ylab("Answers")
 ```
 
-![](README_figs/README-unnamed-chunk-27-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-24-1.png)<!-- -->
 
 Here are the results for Germany.
 
@@ -460,7 +407,7 @@ ess_9 %>%
   ylab("Answers")
 ```
 
-![](README_figs/README-unnamed-chunk-28-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-25-1.png)<!-- -->
 
 What are the options and how many are there?
 
@@ -535,11 +482,11 @@ d %>%
   ggtitle("Opinion on Differences in Wealth 2018")
 ```
 
-![](README_figs/README-unnamed-chunk-32-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-29-1.png)<!-- -->
 
-# WDI
+# 3. WDI Dataset
 
-## Data
+## Require Data
 
 ``` r
 library(WDI)
@@ -601,7 +548,7 @@ dat = WDI(
   start = 1960, end = 2018)
 ```
 
-## Exploration
+## Exploration and Analysis
 
 ``` r
 # Population Developments
@@ -903,8 +850,6 @@ distinct(dat, country)
     ## 265                                     IDA & IBRD total
     ## 266                                             Zimbabwe
 
-## Analysis
-
 Random countries population.
 
 ``` r
@@ -917,7 +862,7 @@ dat %>%
   labs(title = "Random Countries Population", color = "Country")
 ```
 
-![](README_figs/README-unnamed-chunk-36-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-33-1.png)<!-- -->
 
 Bosnia’s population development.
 
@@ -931,7 +876,7 @@ dat %>%
   xlab("Year") + ylab("Population")
 ```
 
-![](README_figs/README-unnamed-chunk-37-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-34-1.png)<!-- -->
 
 Balkan population development.
 
@@ -946,7 +891,7 @@ dat %>%
   xlab("Year") + ylab("Population")
 ```
 
-![](README_figs/README-unnamed-chunk-38-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-35-1.png)<!-- -->
 
 Balkan GDP development.
 
@@ -964,7 +909,7 @@ dat %>%
 
     ## Warning: Removed 18 row(s) containing missing values (geom_path).
 
-![](README_figs/README-unnamed-chunk-39-1.png)<!-- -->
+![](README_figs/README-unnamed-chunk-36-1.png)<!-- -->
 
 Income share by richest 10% in Germany and the United States.
 
@@ -977,698 +922,4 @@ dat %>%
 
     ## Warning: Removed 4 row(s) containing missing values (geom_path).
 
-![](README_figs/README-unnamed-chunk-40-1.png)<!-- -->
-
-# Star Wars
-
-## Exploration
-
-``` r
-skimr::skim(starwars)
-```
-
-<table style="width: auto;" class="table table-condensed">
-<caption>
-Data summary
-</caption>
-<thead>
-<tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:left;">
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Name
-</td>
-<td style="text-align:left;">
-starwars
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Number of rows
-</td>
-<td style="text-align:left;">
-87
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Number of columns
-</td>
-<td style="text-align:left;">
-14
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
-</td>
-<td style="text-align:left;">
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Column type frequency:
-</td>
-<td style="text-align:left;">
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-character
-</td>
-<td style="text-align:left;">
-8
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-list
-</td>
-<td style="text-align:left;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
-</td>
-<td style="text-align:left;">
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Group variables
-</td>
-<td style="text-align:left;">
-None
-</td>
-</tr>
-</tbody>
-</table>
-
-**Variable type: character**
-
-<table>
-<thead>
-<tr>
-<th style="text-align:left;">
-skim_variable
-</th>
-<th style="text-align:right;">
-n_missing
-</th>
-<th style="text-align:right;">
-complete_rate
-</th>
-<th style="text-align:right;">
-min
-</th>
-<th style="text-align:right;">
-max
-</th>
-<th style="text-align:right;">
-empty
-</th>
-<th style="text-align:right;">
-n_unique
-</th>
-<th style="text-align:right;">
-whitespace
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-name
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1.00
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-21
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-87
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-hair_color
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-0.94
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-13
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-12
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-skin_color
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1.00
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-19
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-31
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-eye_color
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1.00
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-13
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-15
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-sex
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-0.95
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-14
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-gender
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-0.95
-</td>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:right;">
-9
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-homeworld
-</td>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:right;">
-0.89
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-14
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-48
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-species
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-0.95
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-14
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-37
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-</tbody>
-</table>
-
-**Variable type: list**
-
-<table>
-<thead>
-<tr>
-<th style="text-align:left;">
-skim_variable
-</th>
-<th style="text-align:right;">
-n_missing
-</th>
-<th style="text-align:right;">
-complete_rate
-</th>
-<th style="text-align:right;">
-n_unique
-</th>
-<th style="text-align:right;">
-min_length
-</th>
-<th style="text-align:right;">
-max_length
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-films
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-24
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-7
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-vehicles
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-11
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-starships
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-17
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-5
-</td>
-</tr>
-</tbody>
-</table>
-
-**Variable type: numeric**
-
-<table>
-<thead>
-<tr>
-<th style="text-align:left;">
-skim_variable
-</th>
-<th style="text-align:right;">
-n_missing
-</th>
-<th style="text-align:right;">
-complete_rate
-</th>
-<th style="text-align:right;">
-mean
-</th>
-<th style="text-align:right;">
-sd
-</th>
-<th style="text-align:right;">
-p0
-</th>
-<th style="text-align:right;">
-p25
-</th>
-<th style="text-align:right;">
-p50
-</th>
-<th style="text-align:right;">
-p75
-</th>
-<th style="text-align:right;">
-p100
-</th>
-<th style="text-align:left;">
-hist
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-height
-</td>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
-0.93
-</td>
-<td style="text-align:right;">
-174.36
-</td>
-<td style="text-align:right;">
-34.77
-</td>
-<td style="text-align:right;">
-66
-</td>
-<td style="text-align:right;">
-167.0
-</td>
-<td style="text-align:right;">
-180
-</td>
-<td style="text-align:right;">
-191.0
-</td>
-<td style="text-align:right;">
-264
-</td>
-<td style="text-align:left;">
-▁▁▇▅▁
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-mass
-</td>
-<td style="text-align:right;">
-28
-</td>
-<td style="text-align:right;">
-0.68
-</td>
-<td style="text-align:right;">
-97.31
-</td>
-<td style="text-align:right;">
-169.46
-</td>
-<td style="text-align:right;">
-15
-</td>
-<td style="text-align:right;">
-55.6
-</td>
-<td style="text-align:right;">
-79
-</td>
-<td style="text-align:right;">
-84.5
-</td>
-<td style="text-align:right;">
-1358
-</td>
-<td style="text-align:left;">
-▇▁▁▁▁
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-birth_year
-</td>
-<td style="text-align:right;">
-44
-</td>
-<td style="text-align:right;">
-0.49
-</td>
-<td style="text-align:right;">
-87.57
-</td>
-<td style="text-align:right;">
-154.69
-</td>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:right;">
-35.0
-</td>
-<td style="text-align:right;">
-52
-</td>
-<td style="text-align:right;">
-72.0
-</td>
-<td style="text-align:right;">
-896
-</td>
-<td style="text-align:left;">
-▇▁▁▁▁
-</td>
-</tr>
-</tbody>
-</table>
-
-## Analysis
-
-Count and proportion table for gender distribution.
-
-``` r
-starwars$gender %>% 
-  fct_count(sort = T, prop = T)
-```
-
-    ## # A tibble: 3 × 3
-    ##   f             n      p
-    ##   <fct>     <int>  <dbl>
-    ## 1 masculine    66 0.759 
-    ## 2 feminine     17 0.195 
-    ## 3 <NA>          4 0.0460
-
-``` r
-starwars %>% 
-  count(gender, sex, sort = T)
-```
-
-    ## # A tibble: 6 × 3
-    ##   gender    sex                n
-    ##   <chr>     <chr>          <int>
-    ## 1 masculine male              60
-    ## 2 feminine  female            16
-    ## 3 masculine none               5
-    ## 4 <NA>      <NA>               4
-    ## 5 feminine  none               1
-    ## 6 masculine hermaphroditic     1
-
-# Economics
-
-## Analysis
-
-Unemployment over time.
-
-``` r
-economics %>% 
-  ggplot() + geom_line(aes(date, unemploy))
-```
-
-![](README_figs/README-unnamed-chunk-43-1.png)<!-- -->
-
-# Heights
-
-## Analysis
-
-``` r
-# heights[male,] %>%
-#   ggplot(aes(height)) +
-#   geom_density(color = "red") +
-#   geom_density(aes(norm_dist), color = "blue") +
-#   geom_label(aes(x = 67, y = 0.09, label = "Heights Distribution"), color = "red")
-```
-
-``` r
-# ## Density vs Normal Distribution 
-# male = heights$sex == "Male"
-# 
-# m = mean(heights$height[male])
-# s = sd(heights$height[male])
-# 
-# norm_dist = rnorm(812, mean = m, sd = s)
-```
-
-Histogram of female height distribution.
-
-``` r
-heights %>% 
-  filter(sex == "Female") %>% 
-  ggplot(aes(height)) + 
-  geom_histogram(color = "black", fill = "red") + 
-  xlab("Female height in meters") + ggtitle("Histogram")
-```
-
-    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-
-![](README_figs/README-unnamed-chunk-46-1.png)<!-- -->
-
-Boxplot of heights by sex.
-
-``` r
-heights %>% 
-  ggplot(aes(sex, height)) + 
-  geom_boxplot(outlier.shape = NA, fill = c("red", "blue")) + 
-  geom_jitter(alpha = 0.5, size = 1)
-```
-
-![](README_figs/README-unnamed-chunk-47-1.png)<!-- -->
-
-QQPlots.
-
-``` r
-heights %>% 
-  ggplot(aes(sample = height)) + geom_qq() + stat_qq() + stat_qq_line()
-```
-
-![](README_figs/README-unnamed-chunk-48-1.png)<!-- -->
-
-``` r
-heights %>% 
-  filter(sex=="Male") %>%
-  ggplot(aes(sample = scale(height))) + 
-  geom_qq() +
-  geom_abline()
-```
-
-![](README_figs/README-unnamed-chunk-48-2.png)<!-- -->
-
-# 
+![](README_figs/README-unnamed-chunk-37-1.png)<!-- -->

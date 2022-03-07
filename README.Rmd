@@ -1,5 +1,5 @@
 ---
-title: "Portfolio: R and Data Analysis"
+title: "Portfolio: Data Analysis in R"
 output: rmarkdown::github_document
 ---
 
@@ -17,9 +17,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Gapminder
+Analysis is done with `tidyverse` and `ggplot2`.
 
-## Analysis
+# 1. Gapminder Dataset
+
+## Exploration and Analysis
 
 What was the life expectancy in Germany for the last 60 years?
 
@@ -30,7 +32,7 @@ gapminder %>%
   geom_line(aes(year,life_expectancy)) +
   scale_y_continuous(labels = scales::comma) + 
   xlab("Year") + ylab("Life Expectancy") + 
-  ggtitle("Line Graph of Life Expectancy in Germany")
+  ggtitle("Life Expectancy in Germany from 1960 to 2015")
 ```
 
 What are the differences in infant mortality rates by continent?
@@ -59,7 +61,7 @@ gapminder %>%
   ggplot(aes(y=reorder(country, population),x = population)) + 
   geom_bar(stat = "identity") + 
   scale_x_continuous(labels = scales::comma) + 
-  ggtitle("Bar Graph of European Countries") + 
+  ggtitle("Population of European Countries") + 
   xlab("Population") + 
   ylab("Country")
 ```
@@ -73,7 +75,7 @@ gapminder %>%
   geom_bar(stat = "identity") + 
   scale_x_continuous(labels = scales::comma) + 
   coord_polar("y", start=0) +
-  ggtitle("Bar Graph of European Countries") + 
+  ggtitle("Population of European Countries") + 
   xlab("Population") + 
   ylab("Country")
 ```
@@ -221,9 +223,9 @@ gapminder %>%
   labs(title = "Life expectancy between continents in 1962 and 2012")
 ```
 
-# European Social Survey
+# 2. European Social Survey Dataset
 
-## Data
+## Require Data
 
 ```{r cache=TRUE}
 library(essurvey)
@@ -238,42 +240,7 @@ show_countries()
 ess_9 <- import_rounds(9)
 ```
 
-## Preparation?
-
-```{r}
-# glimpse(ess_9)
-# summary(ess_9)
-att_data = attributes(ess_9)
-# sk = skim(ess_9)
-# 
-# DataExplorer::create_report(ess_9)
-# 
-# helpful_list = list(att_data$var.labels,)
-# 
-#   attributes(ess_9)["var.labels","val.labels"]
-# val_labels = attributes(ess_9)["label.table"]
-# str(ess_9)
-# ess_9$nwspol
-# 
-# ess_9 %>%
-#   group_by(cntry) %>%
-#   summarise(mean_h = mean(nwspol, na.rm = T)) %>%
-#   ggplot() + aes(mean_h, reorder(cntry, mean_h)) + geom_bar(stat = "identity")
-# 
-# attr(ess_9)
-# 
-# # sjlabelled package
-# rm(all_labels_1)
-# all_labels_1 = get_labels(ess_9, attr.only = T)
-# names(all_labels_1) = all_var_labels
-# 
-# # labelled package way
-# var_list = val_labels(ess_9)
-# all_var_labels = unlist(var_label(ess_9))
-# names(all_labels_2) = all_var_labels
-```
-
-## Exploration
+## Exploration and Analysis
 
 Skim to get an overview of the variables.
 
@@ -288,13 +255,7 @@ Glimpse to get a peak at the first values.
 head(ess_9)
 ```
 
-Show the variable labels stored in attributes.
-
-```{r}
-# attributes(ess_9)["var.labels"]
-```
-
-## Variables
+## Interesting Variables
 
 -   [wltdffr: Differences in wealth in country, how fair](http://nesstar.ess.nsd.uib.no/webview/index.jsp?v=2&submode=variable&study=http%3A%2F%2F129.177.90.83%3A-1%2Fobj%2FfStudy%2FESS9e03.1&gs=undefined&variable=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfVariable%2FESS9e03.1_V518&mode=documentation&top=yes)
 
@@ -317,22 +278,10 @@ ess_9 %>%
   ggplot() + 
   aes(n, reorder(cntry, n), label = n) + 
   geom_bar(stat = "identity", fill = "steelblue") +
-  geom_label() + 
   ggtitle("Subjects per Country")
 ```
 
-How much time do subjects spent watching the news per country?
-
-```{r}
-ess_9 %>% 
-  group_by(cntry) %>% 
-  summarise(mean_h = mean(nwspol, na.rm = T)) %>% 
-  ggplot() + 
-  aes(mean_h, reorder(cntry, mean_h)) + 
-  geom_bar(stat = "identity")
-```
-
-A bar graph displaying opinions on differences in wealth.
+What are the opinions on differences in wealth?
 
 ```{r}
 ess_9 %>% 
@@ -399,9 +348,9 @@ d %>%
   ggtitle("Opinion on Differences in Wealth 2018")
 ```
 
-# WDI
+# 3. WDI Dataset
 
-## Data
+## Require Data
 
 ```{r}
 library(WDI)
@@ -423,7 +372,7 @@ dat = WDI(
   start = 1960, end = 2018)
 ```
 
-## Exploration
+## Exploration and Analysis
 
 ```{r}
 # Population Developments
@@ -431,8 +380,6 @@ summary(dat)
 n_distinct(dat$country)
 distinct(dat, country)
 ```
-
-## Analysis
 
 Random countries population.
 
@@ -493,91 +440,3 @@ dat %>%
   filter(between(year, 1990, 2020)) %>% 
   ggplot(aes(year,inc_sha_10, color = country)) + geom_line()
 ```
-
-# Star Wars
-
-## Exploration
-
-```{r}
-skimr::skim(starwars)
-```
-
-## Analysis
-
-Count and proportion table for gender distribution.
-
-```{r}
-starwars$gender %>% 
-  fct_count(sort = T, prop = T)
-
-starwars %>% 
-  count(gender, sex, sort = T)
-```
-
-# Economics
-
-## Analysis
-
-Unemployment over time.
-
-```{r}
-economics %>% 
-  ggplot() + geom_line(aes(date, unemploy))
-
-```
-
-# Heights
-
-## Analysis
-
-```{r}
-# heights[male,] %>%
-#   ggplot(aes(height)) +
-#   geom_density(color = "red") +
-#   geom_density(aes(norm_dist), color = "blue") +
-#   geom_label(aes(x = 67, y = 0.09, label = "Heights Distribution"), color = "red")
-```
-
-```{r}
-# ## Density vs Normal Distribution 
-# male = heights$sex == "Male"
-# 
-# m = mean(heights$height[male])
-# s = sd(heights$height[male])
-# 
-# norm_dist = rnorm(812, mean = m, sd = s)
-```
-
-Histogram of female height distribution.
-
-```{r}
-heights %>% 
-  filter(sex == "Female") %>% 
-  ggplot(aes(height)) + 
-  geom_histogram(color = "black", fill = "red") + 
-  xlab("Female height in meters") + ggtitle("Histogram")
-```
-
-Boxplot of heights by sex.
-
-```{r}
-heights %>% 
-  ggplot(aes(sex, height)) + 
-  geom_boxplot(outlier.shape = NA, fill = c("red", "blue")) + 
-  geom_jitter(alpha = 0.5, size = 1)
-```
-
-QQPlots.
-
-```{r}
-heights %>% 
-  ggplot(aes(sample = height)) + geom_qq() + stat_qq() + stat_qq_line()
-
-heights %>% 
-  filter(sex=="Male") %>%
-  ggplot(aes(sample = scale(height))) + 
-  geom_qq() +
-  geom_abline()
-```
-
-# 
