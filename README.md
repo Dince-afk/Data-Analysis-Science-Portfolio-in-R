@@ -1,12 +1,11 @@
 Data Analysis and Science in R
 ================
 
-This is a compiled showcase of data analysis work I have written in R
-over the years. I love doing it with `tidyverse` and `ggplot2`, and
+This is a compilation of Data Analysis and Science work I have written in R over the years. I love working with `tidyverse` and `ggplot2`, and
 rely heavy on its environment.
 
 Here are some example analyses 1), my compilation of frequent data
-analysis problems plus their solutions 2) and some data
+analysis problems together with their solutions 2) and some data
 science/statistics showcases 3).
 
 I have also written and compiled a `bookdown` online book for R and Data
