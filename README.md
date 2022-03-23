@@ -1,4 +1,4 @@
-Data Analysis/Science Portfolio in R
+Data Analysis and Science in R
 ================
 
 This is a compiled showcase of data analysis work I have written in R
